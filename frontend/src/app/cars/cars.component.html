@@ -1,0 +1,15 @@
+<p>
+  <mat-form-field appearance="outline">
+    <mat-label>Search Cars</mat-label>
+    <input [(ngModel)]="searchTerm" matInput placeholder="Brand or Model">
+  </mat-form-field>
+</p>
+<div *ngFor="let car of cars | carFilter : searchTerm | paginate: { itemsPerPage: 8, currentPage: pagination }">
+  <mat-card>
+    <mat-card-header class="card-header">
+        {{car.brand}}
+    </mat-card-header>
+    <p>{{car.model}}</p>
+  </mat-card>
+</div>
+<pagination-controls (pageChange)="pagination = $event"></pagination-controls>

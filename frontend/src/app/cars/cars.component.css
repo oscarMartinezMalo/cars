@@ -1,0 +1,27 @@
+.card-header {
+    background-color: #1468a0;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+mat-card {
+    color:white;
+    background-color: #86badc;
+    margin-top: 5px;
+    padding: 10px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;    
+}
+
+mat-card p{
+    margin-top:10px;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #1468a0;
+    opacity: 1; /* Firefox */
+}
+
+mat-label {
+    color: #1468a0;
+}

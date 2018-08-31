@@ -1,0 +1,14 @@
+.mat-raised-button {
+    background-color: darkgray;
+    border: 1px solid darkgray ;
+    margin-bottom: 20px;
+}
+
+.mat-raised-button:hover{
+    background-color: white;
+    border-style: inset;   
+}
+
+h1 {
+    color: #1468a0;
+}
