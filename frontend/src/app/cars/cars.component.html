@@ -1,12 +1,13 @@
+<!-- <input type="button" (click)="openSnackBar()" value="Pop"> -->
 <p>
   <mat-form-field appearance="outline">
     <mat-label>Search Cars</mat-label>
     <input [(ngModel)]="searchTerm" matInput placeholder="Brand or Model">
   </mat-form-field>
 </p>
-<div *ngFor="let car of cars | carFilter : searchTerm | paginate: { itemsPerPage: 8, currentPage: pagination }">
+<div *ngFor="let car of webService.cars | carFilter : searchTerm | paginate: { itemsPerPage: 8, currentPage: pagination }">
   <mat-card>
-    <mat-card-header class="card-header">
+    <mat-card-header [routerLink]="['/cars', car.id]" class="card-header">
         {{car.brand}}
     </mat-card-header>
     <p>{{car.model}}</p>
