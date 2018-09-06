@@ -2,28 +2,25 @@ import { Component, OnInit } from '@angular/core';
 import { WebService } from '../web.service';
 // import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
-//import { Car } from '../car';
-// import { Http } from '@angular/http';
+import { Car } from '../car';
 
 @Component({
-  selector: 'app-cars',
-  templateUrl: './cars.component.html',
-  styleUrls: ['./cars.component.css']
+  selector: 'app-one-car',
+  templateUrl: './one-car.component.html',
+  styleUrls: ['./one-car.component.css']
 })
-export class CarsComponent implements OnInit {
+export class OneCarComponent implements OnInit {
 
   constructor(private webService: WebService, private route: ActivatedRoute) { }
 
-  cars;
+  car: Car;
 
   ngOnInit() {
     var name = this.route.snapshot.params.id;
     this.webService.getCars(name);
     this.webService.carsSubject.subscribe(cars => {
-      this.cars = cars;
+    this.car = cars[0];
     })
   }
 
-  searchTerm: string;
-  pagination = 1;
 }

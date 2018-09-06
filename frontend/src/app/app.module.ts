@@ -3,7 +3,6 @@ import {RouterModule} from "@angular/router";
 import { BrowserModule } from '@angular/platform-browser';
 import {NgxPaginationModule} from 'ngx-pagination';
 
-
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material';
 import {MatCardModule} from '@angular/material/card';
@@ -21,6 +20,7 @@ import { CarFilterPipe } from './car-filter.pipe';
 import { CarsComponent } from './cars/cars.component';
 import { NavComponent } from './nav/nav.component';
 import { HomeComponent} from './home.component';
+import { OneCarComponent } from './one-car/one-car.component';
 
 var routes =[{
   path: '',
@@ -32,7 +32,8 @@ var routes =[{
 },
 {
   path: 'cars/:id',
-  component: CarsComponent,
+  // component: CarsComponent,
+  component: OneCarComponent
 }];
 
 @NgModule({
@@ -41,7 +42,8 @@ var routes =[{
     CarsComponent,
     CarFilterPipe,
     NavComponent,
-    HomeComponent    
+    HomeComponent,
+    OneCarComponent    
   ],
   imports: [
     BrowserModule,

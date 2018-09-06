@@ -2,10 +2,10 @@
 <p>
   <mat-form-field appearance="outline">
     <mat-label>Search Cars</mat-label>
-    <input [(ngModel)]="searchTerm" matInput placeholder="Brand or Model">
+    <input [(ngModel)]="searchTerm" matInput placeholder="By Brand">
   </mat-form-field>
 </p>
-<div *ngFor="let car of webService.cars | carFilter : searchTerm | paginate: { itemsPerPage: 8, currentPage: pagination }">
+<div *ngFor="let car of cars | carFilter : searchTerm | paginate: { itemsPerPage: 8, currentPage: pagination}">
   <mat-card>
     <mat-card-header [routerLink]="['/cars', car.id]" class="card-header">
         {{car.brand}}

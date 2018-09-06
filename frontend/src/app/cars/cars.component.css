@@ -3,12 +3,14 @@
     border-radius: 3px;
     padding: 5px;
 }
-
+.mat-card-header{
+    display: block;
+}
 .mat-card-header:hover{
     cursor: pointer;
 }
 
-mat-card {
+.mat-card {
     color:white;
     background-color: #13162048;
     margin-top: 5px;
