@@ -14,14 +14,9 @@ export class CarsComponent implements OnInit {
 
   constructor(private webService: WebService, private route: ActivatedRoute) { }
 
-  cars;
-
   ngOnInit() {
     var name = this.route.snapshot.params.id;
     this.webService.getCars(name);
-    this.webService.carsSubject.subscribe(cars => {
-      this.cars = cars;
-    })
   }
 
   searchTerm: string;

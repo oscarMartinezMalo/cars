@@ -5,7 +5,7 @@
     <input [(ngModel)]="searchTerm" matInput placeholder="By Brand">
   </mat-form-field>
 </p>
-<div *ngFor="let car of cars | carFilter : searchTerm | paginate: { itemsPerPage: 8, currentPage: pagination}">
+<div *ngFor="let car of webService.cars | async | carFilter : searchTerm | paginate: { itemsPerPage: 8, currentPage: pagination}">
   <mat-card>
     <mat-card-header [routerLink]="['/cars', car.id]" class="card-header">
         {{car.brand}}

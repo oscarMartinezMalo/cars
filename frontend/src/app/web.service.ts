@@ -8,24 +8,29 @@ export class WebService {
 
     BASE_URL = 'http://localhost:3000/api';
 
-     private cars = [];
-
-    carsSubject = new Subject();
+    private carStore = [];
+    private carsSubject = new Subject();
+    cars = this.carsSubject.asObservable();
 
     constructor( private http: Http, private snackBar: MatSnackBar) {}
 
     getCars(oneCar) {        
             oneCar = (oneCar) ? '/' + oneCar : '';
-            var response = this.http.get(this.BASE_URL + '/cars' + oneCar).subscribe(response =>{
-                this.cars = response.json();
-                this.carsSubject.next(this.cars);
+            var response = this.http.get(this.BASE_URL + '/cars' + oneCar).subscribe(response => {
+                this.carStore = response.json();
+                this.carsSubject.next(this.carStore);
             }, error =>{
                 this.handleError("Unable to get Car List");
             });
     }
 
-    // postCar(car) {
-    //     return this.http.post(this.BASE_URL + '/cars', car).toPromise();
+    // postCar(newCar) {
+        // var response = this.http.post(this.BASE_URL + '/cars', newCar).subscribe(response => {
+        //     this.carStore.push(response.json());
+        //     this.carsSubject.next(this.carStore); 
+        // }, error =>{
+        //         this.handleError("Unable to create new Car");
+        //     });
     // }
 
     private handleError(error) {
