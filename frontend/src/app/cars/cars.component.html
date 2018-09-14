@@ -1,16 +1,26 @@
 <!-- <input type="button" (click)="openSnackBar()" value="Pop"> -->
 <p>
-  <mat-form-field appearance="outline">
-    <mat-label>Search Cars</mat-label>
-    <input [(ngModel)]="searchTerm" matInput placeholder="By Brand">
-  </mat-form-field>
-</p>
-<div *ngFor="let car of webService.cars | async | carFilter : searchTerm | paginate: { itemsPerPage: 8, currentPage: pagination}">
-  <mat-card>
-    <mat-card-header [routerLink]="['/cars', car.id]" class="card-header">
-        {{car.brand}}
-    </mat-card-header>
-    <p>{{car.model}}</p>
-  </mat-card>
-</div>
-<pagination-controls (pageChange)="pagination = $event"></pagination-controls>
+    <mat-form-field appearance="outline">
+      <mat-label>Search Cars</mat-label>
+      <input [(ngModel)]="searchTerm" matInput placeholder="By Brand">
+    </mat-form-field>
+  </p>
+  <div *ngFor="let car of webService.cars | async | carFilter : searchTerm | paginate: { itemsPerPage: 8, currentPage: pagination}">
+    <mat-card>
+      <mat-card-header [routerLink]="['/cars', car['stock-number']]" class="card-header">
+          {{car['car-name']}}
+          <!--{{car['web-scraper-start-url']}}    
+          {{car['price-difference']}}      
+          
+          {{car['engine']}}
+          {{car['tranmission']}}
+          {{car['mpg-range']}}
+          {{car['exterior-color']}}
+          {{car['stock-number']}} -->
+      </mat-card-header>
+      <p> {{car['internet-price']}} </p>
+    </mat-card>
+    
+  </div>
+  <pagination-controls (pageChange)="pagination = $event"></pagination-controls>
+  

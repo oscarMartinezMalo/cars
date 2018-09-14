@@ -10,6 +10,6 @@ export class CarFilterPipe implements PipeTransform {
         if (!cars || !searchTerm) {
             return cars;
         }
-        return cars.filter(it => it.brand.toLowerCase().includes(searchTerm));
+        return cars.filter(it => it['car-name'].toLowerCase().includes(searchTerm));
     }
 }

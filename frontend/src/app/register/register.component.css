@@ -1,0 +1,20 @@
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+    margin: 20px auto;
+  }
+  
+  .example-full-width {
+    width: 100%;
+  }
+
+  .card-register{
+      margin:auto;
+      margin-top:10%;
+      max-width: 400px;
+  }
+
+  .error{
+      background-color: #fff0f0;
+  }

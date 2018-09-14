@@ -1,9 +1,9 @@
 export class Car {
 
-    id: number;
-    brand: string;
-    model: string;
-    year: string;
+    // id: number;
+    // brand: string;
+    // model: string;
+    // year: string;
     constructor() {};
     // constructor( id: number, brand: string, model: string, year: string) {
     //     this.id = id;

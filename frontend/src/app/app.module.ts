@@ -4,11 +4,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import {NgxPaginationModule} from 'ngx-pagination';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatButtonModule} from '@angular/material';
+import {MatButtonModule, MatIconModule} from '@angular/material';
 import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material';
-import { FormsModule } from '@angular/forms';
+import {MatInputModule, MatTableModule, MatPaginatorModule, MatSortModule} from '@angular/material';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WebService } from './web.service';
 import { HttpModule } from '@angular/http';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -21,6 +21,7 @@ import { CarsComponent } from './cars/cars.component';
 import { NavComponent } from './nav/nav.component';
 import { HomeComponent} from './home.component';
 import { OneCarComponent } from './one-car/one-car.component';
+import { RegisterComponent } from './register/register.component';
 
 var routes =[{
   path: '',
@@ -34,7 +35,14 @@ var routes =[{
   path: 'cars/:id',
   // component: CarsComponent,
   component: OneCarComponent
-}];
+}
+,
+{
+  path: 'register',
+  // component: CarsComponent,
+  component: RegisterComponent
+}
+];
 
 @NgModule({
   declarations: [
@@ -43,7 +51,8 @@ var routes =[{
     CarFilterPipe,
     NavComponent,
     HomeComponent,
-    OneCarComponent    
+    OneCarComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
@@ -53,12 +62,17 @@ var routes =[{
     MatFormFieldModule,
     MatCardModule,
     FormsModule,
+    ReactiveFormsModule,
     NgxPaginationModule,
     HttpModule,
     MatSnackBarModule,
     MatMenuModule,
     MatToolbarModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatIconModule    
   ],
   providers: [WebService],
   bootstrap: [AppComponent]

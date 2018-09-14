@@ -28,7 +28,7 @@ var api = express.Router();
 
 api.get('/cars', (req, res) => {
    // res.json(cars);
-    let sql = 'SELECT * FROM `cars`.`doral-hundai`';
+    let sql = 'SELECT * FROM CAR';
     let query = db.query(sql,(err, results)=>{
         if(err) throw err;
         res.json(results);
@@ -37,14 +37,24 @@ api.get('/cars', (req, res) => {
 
 api.get('/cars/:id', (req, res) => {
     var id = req.params.id;
-     let sql = 'SELECT * FROM  `cars`.`doral-hundai` WHERE  `stock-number` =' + "'" + id + "'";
-     console.log(sql);
+    // res.json(cars);
+     let sql = 'SELECT * FROM CAR WHERE CAR.ID =' + id;
      let query = db.query(sql,(err, result)=>{
          if(err) throw err;
          console.log(result);
          res.json(result);
      })
  })
+
+// api.post('/cars', (req, res) => {
+//     // res.json(cars);
+//      let sql = 'INSERT * INTO CAR';
+//      let query = db.query(sql,(err, results)=>{
+//          if(err) throw err;
+//          console.log(results);
+//          res.json(results);
+//      })
+//  })
 
 app.use('/api', api);
 

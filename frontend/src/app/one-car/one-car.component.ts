@@ -4,6 +4,7 @@ import { WebService } from '../web.service';
 import { ActivatedRoute } from '@angular/router';
 // import { Car } from '../car';
 
+
 @Component({
   selector: 'app-one-car',
   templateUrl: './one-car.component.html',
@@ -12,8 +13,6 @@ import { ActivatedRoute } from '@angular/router';
 export class OneCarComponent implements OnInit {
 
   constructor(private webService: WebService, private route: ActivatedRoute) { }
-
-  // car: Car;
 
   ngOnInit() {
     var name = this.route.snapshot.params.id;
