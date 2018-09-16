@@ -1,29 +1,31 @@
 import { NgModule } from '@angular/core';
-import {RouterModule} from "@angular/router";
+import { RouterModule } from "@angular/router";
 import { BrowserModule } from '@angular/platform-browser';
-import {NgxPaginationModule} from 'ngx-pagination';
+import { NgxPaginationModule } from 'ngx-pagination';
 
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatButtonModule, MatIconModule} from '@angular/material';
-import {MatCardModule} from '@angular/material/card';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule, MatTableModule, MatPaginatorModule, MatSortModule} from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonModule, MatIconModule } from '@angular/material';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule, MatTableModule, MatPaginatorModule, MatSortModule } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WebService } from './web.service';
+import { AuthService } from "./auth.service";
 import { HttpModule } from '@angular/http';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { AppComponent } from './app.component';
 import { CarFilterPipe } from './car-filter.pipe';
 import { CarsComponent } from './cars/cars.component';
 import { NavComponent } from './nav/nav.component';
-import { HomeComponent} from './home.component';
+import { HomeComponent } from './home.component';
 import { OneCarComponent } from './one-car/one-car.component';
 import { RegisterComponent } from './register/register.component';
+import { LoginComponent } from './login/login.component';
 
-var routes =[{
+var routes = [{
   path: '',
   component: HomeComponent,
 },
@@ -33,14 +35,16 @@ var routes =[{
 },
 {
   path: 'cars/:id',
-  // component: CarsComponent,
   component: OneCarComponent
 }
-,
+  ,
 {
   path: 'register',
-  // component: CarsComponent,
   component: RegisterComponent
+},
+{
+  path: 'login',
+  component: LoginComponent
 }
 ];
 
@@ -52,7 +56,8 @@ var routes =[{
     NavComponent,
     HomeComponent,
     OneCarComponent,
-    RegisterComponent
+    RegisterComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -72,9 +77,9 @@ var routes =[{
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    MatIconModule    
+    MatIconModule
   ],
-  providers: [WebService],
+  providers: [WebService, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

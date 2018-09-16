@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from "@angular/forms";
+import { AuthService } from '../auth.service';
 // import { FormBuilder, FormControl, FormGroupDirective, NgForm, Validators } from "@angular/forms";
 // import {ErrorStateMatcher} from '@angular/material/core';
 
@@ -27,7 +28,7 @@ export class RegisterComponent implements OnInit {
 
   form;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private auth: AuthService) {
     this.form = fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -47,10 +48,9 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    // console.log(this.form.valid);
     // console.log(this.form.value);
-    console.log(this.form.errors);
-    
+    // console.log(this.form.errors);
+    this.auth.register(this.form.value);
   }
 
   isValid(control) {
@@ -58,10 +58,10 @@ export class RegisterComponent implements OnInit {
   }
 
   emailValid() {
-    return control =>{
+    return control => {
       var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-      return regex.test(control.value) ? null : { invalidEmail : true}
+      return regex.test(control.value) ? null : { invalidEmail: true }
     }
   }
 

@@ -5,14 +5,14 @@
 }
 .mat-card-header{
     display: block;
+    color: white;
 }
 .mat-card-header:hover{
     cursor: pointer;
 }
 
 .mat-card {
-    color:white;
-    background-color: #13162048;
+    background-color: whitesmoke;
     margin-top: 5px;
     padding: 10px;
     font-family: 'Times New Roman', Times, serif;

@@ -24,15 +24,6 @@ export class WebService {
             });
     }
 
-    // postCar(newCar) {
-        // var response = this.http.post(this.BASE_URL + '/cars', newCar).subscribe(response => {
-        //     this.carStore.push(response.json());
-        //     this.carsSubject.next(this.carStore); 
-        // }, error =>{
-        //         this.handleError("Unable to create new Car");
-        //     });
-    // }
-
     private handleError(error) {
         this.snackBar.open(error, "close", {duration: 2000});
     }
