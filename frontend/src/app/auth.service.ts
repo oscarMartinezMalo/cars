@@ -7,13 +7,13 @@ import { Router } from "@angular/router";
 export class AuthService {
 
     BASE_URL = 'http://localhost:3000/auth';
-    NAME_KEY = 'name';
+    EMAIL_KEY = 'email';
     TOKEN_KEY ='token';
 
     constructor(private http: Http, private snackBar: MatSnackBar, private router: Router ) { }
 
-    get name(){
-        return localStorage.getItem(this.NAME_KEY);
+    get email(){
+        return localStorage.getItem(this.EMAIL_KEY);
     }
 
     get isAuthenticated(){
@@ -21,8 +21,9 @@ export class AuthService {
     }
 
     register(user) {
-        delete user.confirmPassword;
-        var response = this.http.post(this.BASE_URL + '/register', user).subscribe(res => {
+        //delete user.confirmPassword;
+
+        var response = this.http.post(this.BASE_URL + '/signup', user).subscribe(res => {
             this.authenticate(res);
         }, error =>{
             this.handleError("Unable to created User");
@@ -30,7 +31,7 @@ export class AuthService {
     }
 
     logout(){
-        localStorage.removeItem(this.NAME_KEY);
+        localStorage.removeItem(this.EMAIL_KEY);
         localStorage.removeItem(this.TOKEN_KEY);
     }
 
@@ -38,18 +39,20 @@ export class AuthService {
         let response = this.http.post(this.BASE_URL + '/login', loginData).subscribe(res => {
             this.authenticate(res);
         }, error =>{
+            console.log(error);
             this.handleError("Unable to Login");
         });
     }
 
     authenticate(res){
         var authResponse = res.json();
-        console.log(res);
+        if (authResponse.success == false){
+            this.handleError(authResponse.message);
+        }
         if (!authResponse.token)              
             return;
-        // console.log(res.json());
         localStorage.setItem(this.TOKEN_KEY, authResponse.token);
-        localStorage.setItem(this.NAME_KEY, authResponse.firstName);
+        localStorage.setItem(this.EMAIL_KEY, authResponse.firstName);
         this.router.navigate(['/']);
     }
 
