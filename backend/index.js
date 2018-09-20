@@ -5,8 +5,8 @@ import bodyParser from 'body-parser';
 import crypto from 'crypto';
 import { check } from 'express-validator/check';
 import { validationResult } from 'express-validator/check';
-import { promises } from 'fs';
-
+// import { promises } from 'fs';
+// import { morgan } from 'morgan';
 
 // Create Connection 
 const db = mysql.createConnection({
@@ -22,15 +22,15 @@ db.connect(err => {
 })
 
 const app = express()
-var jsonParser = bodyParser.json()
-
+const jsonParser = bodyParser.json()
+// Error using Morgan
+// app.use(morgan('combined'));
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-Width, Content-Type,Accept");
     next();
 })
-
 
 var api = express.Router();
 var auth = express.Router();
@@ -127,7 +127,6 @@ auth.post('/signup', jsonParser, [
 
         let sql = 'INSERT INTO `cars`.`users` (firstName,lastName,email,passwordSalt,passwordHash) VALUES(' + mysql.escape(user.firstName) + ',' + mysql.escape(user.lastName) + ',' + mysql.escape(user.email) + ',' + mysql.escape(hashSalt.salt) + ',' + mysql.escape(hashSalt.hash) + ')';
         db.query(sql, (err, results) => {
-            console.log(err);
             if (err) throw err;
             sendToken(user, res, hashSalt.hash);
         })
@@ -183,6 +182,15 @@ function sha512(password, salt) {
 app.use('/api', api)
 app.use('/auth', auth)
 
+app.use((req, res, next) => {
+    const error = new Error("Not Found");
+    error.status = 404;
+    next(error);
+})
+
+app.use((error, req, res, next) => {
+    res.status(error.status || 500).json({ error: { message: error.message } });
+});
 
 app.listen(3000, () => console.log("cars"));
 
