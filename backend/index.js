@@ -63,9 +63,8 @@ auth.post('/login', [
 ], (req, res, next) => {
 
     const errors = validationResult(req);
-
     if (!errors.isEmpty()) {
-        return res.status(422).json({ error: {message: errors.array()[0].msg }});
+        return res.status(422).json({ error: { message: errors.array()[0].msg } });
     }
 
     var user = req.body;
@@ -73,7 +72,7 @@ auth.post('/login', [
 
     db.query(sql, (err, results) => {
         if (err) {
-             next(err);
+            next(err);
         } else {
 
             if (!results.length) {
@@ -132,7 +131,7 @@ auth.post('/signup', [
         const errors = validationResult(req);
         console.log(errors.array());
         if (!errors.isEmpty()) {
-            return res.status(422).json({ error: {message: errors.array()[0].msg }});
+            return res.status(422).json({ error: { message: errors.array()[0].msg } });
         }
         // If there is no any Error continue and created a new User
         let user = req.body;
@@ -194,6 +193,7 @@ function sha512(password, salt) {
 app.use('/api', api)
 app.use('/auth', auth)
 
+// Validation Block
 app.use((req, res, next) => {
     const error = new Error("Not Found");
     error.status = 404;
