@@ -48,10 +48,9 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    // console.log(this.form.value);
+    // console.log(this.form.valid);
     // console.log(this.form.errors);
     if (this.form.valid){
-      console.log(this.form.valid);
       this.auth.register(this.form.value);
     }
 

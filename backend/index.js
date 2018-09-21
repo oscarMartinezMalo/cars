@@ -8,6 +8,22 @@ import { validationResult } from 'express-validator/check';
 // import { promises } from 'fs';
 // import { morgan } from 'morgan';
 
+const app = express()
+//const jsonParser = bodyParser.json()
+// Error using Morgan
+// app.use(morgan('combined'));
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-Width, Content-Type, Accept");
+    next();
+})
+
+var api = express.Router();
+var auth = express.Router();
+
 // Create Connection 
 const db = mysql.createConnection({
     host: "localhost",
@@ -20,20 +36,6 @@ db.connect(err => {
     if (err) throw err;
     console.log("Connected!");
 })
-
-const app = express()
-const jsonParser = bodyParser.json()
-// Error using Morgan
-// app.use(morgan('combined'));
-
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-Width, Content-Type,Accept");
-    next();
-})
-
-var api = express.Router();
-var auth = express.Router();
 
 api.get('/cars', (req, res) => {
     let sql = 'SELECT * FROM `cars`.`doral-hundai`';
@@ -54,41 +56,53 @@ api.get('/cars/:id', (req, res) => {
     })
 })
 
-auth.post('/login', jsonParser, [
+auth.post('/login', [
     check('email', "This is not a valid email").isEmail()
         .normalizeEmail(),
     check('password', "Password must have 5 Characters").isLength({ min: 5 })
-], (req, res) => {
+], (req, res, next) => {
+
     const errors = validationResult(req);
-    console.log(errors.array());
+
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        return res.status(422).json({ error: {message: errors.array()[0].msg }});
     }
 
     var user = req.body;
     let sql = 'SELECT * FROM `cars`.`users` WHERE email ="' + user.email + '"';
 
     db.query(sql, (err, results) => {
-        if (err) throw err;
+        if (err) {
+             next(err);
+        } else {
 
-        if (!results.length) {
-            /* sendAuthError(res);  Error if didn't find any user with that email */
-            return res.status(422).json({ msg: 'Not email registered' });
-        }
-        else {
-            let dbUser = results[0];
+            if (!results.length) {
+                /* sendAuthError(res);  Error if didn't find any user with that email */
+                //return res.status(422).json({ message: 'Buajaja email registered' });
+                const error = new Error("Buajaja email not registered");
+                error.status = 409;
+                next(error);
+            }
+            else {
+                let dbUser = results[0];
 
-            var hashSalt = sha512(user.password, dbUser.passwordSalt);
+                var hashSalt = sha512(user.password, dbUser.passwordSalt);
 
-            if (dbUser.passwordHash == hashSalt.hash)
-                sendToken(dbUser, res, hashSalt.hash);
-            else
-                sendAuthError(res);
+                if (dbUser.passwordHash == hashSalt.hash) {
+                    sendToken(dbUser, res, hashSalt.hash);
+                }
+                else {
+                    // res.status(422).json({ message: 'Incorrect password' });
+                    const error = new Error("Ohh Uhh Incorrect password");
+                    error.status = 409;
+                    next(error);
+                }
+            }
         }
     })
 })
 
-auth.post('/signup', jsonParser, [
+auth.post('/signup', [
     // Validation the fields comming front the frontend
     check('firstName', "Not a valid First Name")
         .isLength({ min: 3 })
@@ -114,11 +128,11 @@ auth.post('/signup', jsonParser, [
             return true;
     })
 ],
-    (req, res) => {
+    (req, res, next) => {
         const errors = validationResult(req);
         console.log(errors.array());
         if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
+            return res.status(422).json({ error: {message: errors.array()[0].msg }});
         }
         // If there is no any Error continue and created a new User
         let user = req.body;
@@ -127,8 +141,11 @@ auth.post('/signup', jsonParser, [
 
         let sql = 'INSERT INTO `cars`.`users` (firstName,lastName,email,passwordSalt,passwordHash) VALUES(' + mysql.escape(user.firstName) + ',' + mysql.escape(user.lastName) + ',' + mysql.escape(user.email) + ',' + mysql.escape(hashSalt.salt) + ',' + mysql.escape(hashSalt.hash) + ')';
         db.query(sql, (err, results) => {
-            if (err) throw err;
-            sendToken(user, res, hashSalt.hash);
+            if (err) {
+                next(err);
+            } else {
+                sendToken(user, res, hashSalt.hash);
+            }
         })
 
     });
@@ -151,15 +168,10 @@ function findUserByEmail(email) {
 
 }
 
-
 // Response the user plus Token
 function sendToken(user, res, token) {
     res.json({ firstName: user.email, token: token });
 }
-
-// function sendAuthError(res) {
-//     return res.json({ success: false, message: 'Email or Password Incorrect' });
-// }
 
 // ** Generate Salt
 function genRandomString(length) {
@@ -189,6 +201,7 @@ app.use((req, res, next) => {
 })
 
 app.use((error, req, res, next) => {
+    console.log(error.message);
     res.status(error.status || 500).json({ error: { message: error.message } });
 });
 

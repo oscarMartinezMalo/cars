@@ -26,7 +26,8 @@ export class AuthService {
         var response = this.http.post(this.BASE_URL + '/signup', user).subscribe(res => {
             this.authenticate(res);
         }, error =>{
-            this.handleError("Unable to created User");
+            console.log(error);
+            this.handleError(error.message);
         });
     }
 
@@ -46,9 +47,9 @@ export class AuthService {
 
     authenticate(res){
         var authResponse = res.json();
-        if (authResponse.success == false){
-            this.handleError(authResponse.message);
-        }
+        // if (authResponse.success == false){
+        //     this.handleError(authResponse.message);
+        // }
         if (!authResponse.token)              
             return;
         localStorage.setItem(this.TOKEN_KEY, authResponse.token);
