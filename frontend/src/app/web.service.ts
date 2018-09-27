@@ -16,11 +16,12 @@ export class WebService {
 
     getCars(oneCar) {        
             oneCar = (oneCar) ? '/' + oneCar : '';
-            var response = this.http.get(this.BASE_URL + '/cars' + oneCar).subscribe(response => {
+            var response = this.http.get(this.BASE_URL + '/cars' + oneCar, { withCredentials: true }).subscribe(response => {
                 this.carStore = response.json();
                 this.carsSubject.next(this.carStore);
             }, error =>{
-                this.handleError("Unable to get Car List");
+                //this.handleError(error);
+                this.handleError("You have to be logged to see beyond the walls");
             });
     }
 

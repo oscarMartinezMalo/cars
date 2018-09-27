@@ -12,8 +12,8 @@ export class LoginComponent implements OnInit {
   constructor(private auth: AuthService) { }
 
   loginData = {
-    email: '',
-    password: ''
+    email: 'titi@titi.com',
+    password: 'tititi'
   }
   login(){
     this.auth.login(this.loginData);

@@ -4,5 +4,6 @@
   <button *ngIf="!auth.isAuthenticated" mat-button routerLink="/register">SignUp</button>
   <button *ngIf="!auth.isAuthenticated" mat-button routerLink="/login">Login</button>
   <button *ngIf="auth.isAuthenticated" mat-button routerLink="/">{{auth.email}}</button>
-  <button *ngIf="auth.isAuthenticated" mat-button routerLink="/cars" (click) = "auth.logout()">Logout</button>
+  <!-- <button *ngIf="auth.isAuthenticated" routerLink="/cars" (click) = "auth.logout()">Logout</button> -->
+  <button *ngIf="auth.isAuthenticated" mat-button  (click) = "auth.logout()">Logout</button>
 </mat-toolbar>
