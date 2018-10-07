@@ -1,16 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from "@angular/forms";
+import { FormBuilder, Validators, FormGroup } from "@angular/forms";
 import { AuthService } from '../auth.service';
-// import { FormBuilder, FormControl, FormGroupDirective, NgForm, Validators } from "@angular/forms";
-// import {ErrorStateMatcher} from '@angular/material/core';
-
-/** Error when invalid control is dirty, touched, or submitted. */
-// export class MyErrorStateMatcher implements ErrorStateMatcher {
-//   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-//     const isSubmitted = form && form.submitted;
-//     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-//   }
-// }
 
 @Component({
   selector: 'app-register',
@@ -19,13 +9,6 @@ import { AuthService } from '../auth.service';
 })
 export class RegisterComponent implements OnInit {
 
-  // emailFormControl = new FormControl('', [
-  //   Validators.required,
-  //   Validators.email,
-  // ]);
-
-  // matcher = new MyErrorStateMatcher();
-
   form;
 
   constructor(private fb: FormBuilder, private auth: AuthService) {
@@ -33,31 +16,33 @@ export class RegisterComponent implements OnInit {
       firstName: ['', [Validators.required, Validators.minLength(3)]],
       lastName: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, this.emailValid()]],
-      password: ['', Validators.required],
-      confirmPassword: ['', Validators.required]
-    },
-      {
-        validator: (form) => {
-          if (form.controls['password'].value !== form.controls['confirmPassword'].value)
-            return { mismatchedFields: true };
-        }
-      })
+      password: ['', [Validators.required, Validators.minLength(3)]],
+      confirmPassword: ['', [Validators.required]]
+    }
+      // Custom Validator but in this case I created a custom directive 
+      // to do the password match validation
+      // ,
+      //   {
+      //     validator: (form) => {
+      //       if (form.controls['password'].value !== form.controls['confirmPassword'].value)
+      //         return { mismatchedFields: true };
+      //     }
+      //   }
+    )
   }
 
   ngOnInit() {
   }
 
   onSubmit() {
-    // console.log(this.form.valid);
-    // console.log(this.form.errors);
-    if (this.form.valid){
+    // console.log(this.form.get("confirmPassword").errors );
+    if (this.form.valid) {
       this.auth.register(this.form.value);
     }
-
   }
 
   isValid(control) {
-    return (this.form.controls[control].invalid && this.form.controls[control].touched)
+    return (this.form.controls[control].invalid && this.form.controls[control].touched);
   }
 
   emailValid() {
@@ -66,5 +51,4 @@ export class RegisterComponent implements OnInit {
       return regex.test(control.value) ? null : { invalidEmail: true }
     }
   }
-
 }

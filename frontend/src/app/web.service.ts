@@ -2,6 +2,7 @@ import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { Subject } from 'rxjs';
+import { AuthService } from '../app/auth.service';
 
 @Injectable()
 export class WebService {
@@ -12,21 +13,22 @@ export class WebService {
     private carsSubject = new Subject();
     cars = this.carsSubject.asObservable();
 
-    constructor( private http: Http, private snackBar: MatSnackBar) {}
+    constructor( private http: Http, private snackBar: MatSnackBar, private auth: AuthService) {}
 
     getCars(oneCar) {        
             oneCar = (oneCar) ? '/' + oneCar : '';
-            var response = this.http.get(this.BASE_URL + '/cars' + oneCar, { withCredentials: true }).subscribe(response => {
-                this.carStore = response.json();
+            var res = this.http.get(this.BASE_URL + '/cars' + oneCar, { withCredentials: true }).subscribe((res) => {
+                this.carStore = res.json();
                 this.carsSubject.next(this.carStore);
             }, error =>{
-                //this.handleError(error);
+                //this.handleError(error);                
+                this.auth.logout(); // If not logged go and delete the localStorage User 
                 this.handleError("You have to be logged to see beyond the walls");
             });
     }
 
     private handleError(error) {
-        this.snackBar.open(error, "close", {duration: 2000});
+        this.snackBar.open(error, "close", {duration: 6000});
     }
 
 }

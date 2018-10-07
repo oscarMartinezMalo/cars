@@ -7,7 +7,7 @@ import { check } from 'express-validator/check';
 import { validationResult } from 'express-validator/check';
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
-
+const uuidv1 = require('uuid/v1');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -35,13 +35,18 @@ var auth = express.Router();
 const db = mysql.createConnection({ host: "localhost", user: "root", password: "admin123", database: 'CARS' });
 var sessionStore = new MySQLStore({}, db);
 app.use(session({
+    genid: function (req) {
+        return genuuid() // use UUIDs for session IDs
+    },
     secret: 'asdasdasd',
     store: sessionStore,    // this set the session storage to the dataBase, by default the sessions are storage in memory not recomended in production
     resave: false,
     saveUninitialized: false, //If is false is not gonna persist in the dataBase
-    cookie: { maxAge: 60000 }
+    cookie: { maxAge: 60000 } // 60000 is one minute
 }))
 
+//Function to generate a new session ID
+function genuuid() { return uuidv1(); };
 
 db.connect(err => {
     if (err) throw err;
@@ -51,7 +56,7 @@ db.connect(err => {
 api.get('/cars', (req, resp) => {
 
     // Console log to check is user loggedIn
-    req.session.user ? console.log("Old session") : console.log("New session");
+    req.session.user ? console.log("Session number " + req.session.user) : console.log("New session");
 
     //Select all the cars from the cars DB
     let sql = 'SELECT * FROM `cars`.`doral-hundai`';
@@ -116,7 +121,6 @@ auth.post('/login', [
                 var hashSalt = sha512(user.password, dbUser.passwordSalt);
 
                 if (dbUser.passwordHash == hashSalt.hash) {
-                    console.log(dbUser.id);
                     req.session.user = dbUser.id;
                     resp.json({ email: user.email });
                 }
@@ -133,30 +137,35 @@ auth.post('/login', [
 
 
 auth.post('/signup', [
-    // Validation the fields comming front the frontend
+    // Validating fields comming front the frontend
     check('firstName', "Not a valid First Name")
-        .isLength({ min: 3 })
+        .isLength({ min: 3, max: 15 })
         .trim()
         .escape(),
     check('lastName', "Not a valid Last Name")
-        .isLength({ min: 3 })
+        .isLength({ min: 3, max: 15 })
         .not().isEmpty()
         .trim()
         .escape(),
     check('email', "This is not a valid email").isEmail()
+        .isLength({ max: 15 })
         .normalizeEmail(),
-    check('email').custom(value => {
-        return findUserByEmail(value).then(user => {
-            return true;
+    check('email')
+        .custom(value => {
+            return findUserByEmail(value).then(user => {
+                return true;
+            })
+        }),
+    check('password', "Password must have 5 Characters")
+        .isLength({ min: 3, max: 15 }),
+    check('confirmPassword')
+        .isLength({ min: 3, max: 15 })
+        .custom((value, { req }) => {
+            if (value !== req.body.password) {
+                throw new Error('Password confirmation does not match password');
+            } else
+                return true;
         })
-    }),
-    check('password', "Password must have 5 Characters").isLength({ min: 5 }),
-    check('confirmPassword').custom((value, { req }) => {
-        if (value !== req.body.password) {
-            throw new Error('Password confirmation does not match password');
-        } else
-            return true;
-    })
 ],
     (req, resp, next) => {
         const errors = validationResult(req);
@@ -189,7 +198,7 @@ auth.post('/signup', [
     });
 
 auth.post('/logout', (req, res) => {
-    console.log(req.session.id + "oscar");
+
     req.session.destroy(function (err) {
         // cannot access session here
         if (err) throw err;
@@ -214,6 +223,59 @@ function findUserByEmail(email) {
         })
     })
 }
+
+
+auth.post('/updateName', authMiddleware, [
+    // Validation the fields comming front the frontend
+    check('firstName', "Not a valid First Name")
+        .isLength({ min: 3 })
+        .trim()
+        .escape(),
+    check('lastName', "Not a valid Last Name")
+        .isLength({ min: 3 })
+        .not().isEmpty()
+        .trim()
+        .escape()
+],
+    (req, resp, next) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return resp.status(422).json({ error: { message: errors.array()[0].msg } });
+        }
+
+        // If there is no any Error continue and Update the  User
+        let user = req.body;
+        let sql = 'UPDATE `cars`.`users` SET firstName = ' + "'" + user.firstName + "'" + ', lastName= ' + "'" + user.lastName + "'" + ' WHERE  id =' + "'" + req.session.user + "'";
+        console.log(sql);
+        db.query(sql, (err, results) => {
+            if (err) {
+                next(err);
+            } else {
+                resp.status(200).send({ success: "Ok" });
+
+            }
+        })
+
+    });
+
+
+// Pass the middleWare if you wanna ask if the user is logged before executing the request
+auth.get('/getUserInfo', authMiddleware, (req, resp) => {
+    console.log(req.session.user);
+    let sql = 'SELECT `users`.`firstName`, `users`.`lastName` FROM  `cars`.`users` WHERE  `id` =' + "'" + req.session.user + "'";
+    let query = db.query(sql, (err, result) => {
+        if (err) throw err;
+        resp.json(result);
+    })
+})
+
+
+
+
+
+
+
 
 
 // ** Generate Salt

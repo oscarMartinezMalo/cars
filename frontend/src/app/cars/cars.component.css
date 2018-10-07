@@ -19,6 +19,11 @@
     font-weight: bold;    
 }
 
+.mat-card-warning{
+    background-color: rgb(218, 99, 99);
+    color: white;
+}
+
 mat-card p{
     margin-top:10px;
 }

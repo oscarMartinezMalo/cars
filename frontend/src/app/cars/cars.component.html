@@ -1,17 +1,18 @@
 <p>
-    <mat-form-field appearance="outline">
-      <mat-label>Search Cars</mat-label>
-      <input [(ngModel)]="searchTerm" matInput placeholder="By Brand">
-    </mat-form-field>
-  </p>
-  <div *ngFor="let car of webService.cars | async | carFilter : searchTerm | paginate: { itemsPerPage: 8, currentPage: pagination}">
-    <mat-card>
-      <mat-card-header [routerLink]="['/cars', car['stock-number']]" class="card-header">
-          {{car['car-name']}}
-      </mat-card-header>
-      <p> {{car['internet-price']}} </p>
-    </mat-card>
-    
-  </div>
-  <pagination-controls (pageChange)="pagination = $event"></pagination-controls>
-  
+  <mat-form-field appearance="outline">
+    <mat-label>Search Cars</mat-label>
+    <input [(ngModel)]="searchTerm" matInput placeholder="By Brand">
+  </mat-form-field>
+</p>
+<div *ngFor="let car of webService.cars | async | carFilter : searchTerm | paginate: { itemsPerPage: 8, currentPage: pagination}">
+  <mat-card>
+    <mat-card-header [routerLink]="['/cars', car['stock-number']]" class="card-header">
+      {{car['car-name']}}
+    </mat-card-header>
+    <p> {{car['internet-price']}} </p>
+  </mat-card>
+</div>
+
+<mat-card *ngIf="((webService.cars | async | carFilter : searchTerm)?.length) == 0 " class="mat-card-warning">Not cars Founded, que te parece buahahaha</mat-card>
+<pagination-controls (pageChange)="pagination = $event"></pagination-controls>
+

@@ -15,6 +15,7 @@ import { HttpModule } from '@angular/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { CookieService } from 'ngx-cookie-service';
 
 import { AppComponent } from './app.component';
 import { CarFilterPipe } from './car-filter.pipe';
@@ -24,6 +25,8 @@ import { HomeComponent } from './home.component';
 import { OneCarComponent } from './one-car/one-car.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
+import { UpdateUserComponent } from './update-user/update-user.component';
+import { ConfirmValidatorDirective } from "./ConfirmValidatorDirective";
 
 var routes = [{
   path: '',
@@ -45,6 +48,10 @@ var routes = [{
 {
   path: 'login',
   component: LoginComponent
+},
+{
+  path: 'update',
+  component: UpdateUserComponent
 }
 ];
 
@@ -57,7 +64,9 @@ var routes = [{
     HomeComponent,
     OneCarComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    UpdateUserComponent,
+    ConfirmValidatorDirective
   ],
   imports: [
     BrowserModule,
@@ -79,7 +88,7 @@ var routes = [{
     MatSortModule,
     MatIconModule
   ],
-  providers: [WebService, AuthService],
+  providers: [WebService, AuthService, CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

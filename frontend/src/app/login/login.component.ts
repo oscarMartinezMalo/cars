@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from "@angular/forms";
+// import { FormBuilder, Validators } from "@angular/forms";
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -15,9 +15,11 @@ export class LoginComponent implements OnInit {
     email: 'titi@titi.com',
     password: 'tititi'
   }
+
   login(){
     this.auth.login(this.loginData);
   }
+  
   ngOnInit() {
   }
 

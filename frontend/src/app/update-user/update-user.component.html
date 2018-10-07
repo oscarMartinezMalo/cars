@@ -1,0 +1,30 @@
+<div class="login-container">
+
+  <mat-card class="example-card card-login">
+    <mat-form-field class="example-full-width">
+      <input [(ngModel)]="updateUserName.firstName" matInput placeholder="First Name">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input [(ngModel)]="updateUserName.lastName"  matInput placeholder="Last Name">
+    </mat-form-field>
+    <br>
+    <button mat-raised-button color="primary" (click)="updateName()">Update Name</button>
+
+    <mat-form-field class="example-full-width">
+      <input [(ngModel)]="updateUserPassword.password" matInput placeholder="Current Password" type="password">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input [(ngModel)]="updateUserPassword.newPassword" matInput placeholder="New Password" type="password">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <input [(ngModel)]="updateUserPassword.confirmPassword" matInput placeholder="Confirm Password" type="password">
+    </mat-form-field>
+
+    <br>
+    <button mat-raised-button color="primary" (click)="updatePassword()">Update Password</button>
+  </mat-card>
+
+</div>

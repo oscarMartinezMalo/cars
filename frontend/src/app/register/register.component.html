@@ -1,38 +1,36 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="example-form">
   <mat-card class="example-card card-register">
     <mat-form-field class="example-full-width">
-      <input [ngClass]="{'error': isValid('firstName')}" matInput placeholder="First Name" formControlName="firstName">
+      <input [ngClass]="{'error': isValid('firstName')}" matInput placeholder="First Name" formControlName="firstName" maxlength="15">
+      <!-- <mat-error *ngIf="form.get('firstName').errors?.required">Required</mat-error> -->
+      <mat-error *ngIf="form.hasError('required', 'firstName')">Required</mat-error>
+      <mat-error *ngIf="form.hasError('minlength', 'firstName')">Minimum length 3 characters</mat-error>      
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
-        <input [ngClass]="{'error': isValid('lastName')}" matInput placeholder="Last Name" formControlName="lastName">
-    </mat-form-field>
-
-    <!-- <mat-form-field class="example-full-width">
-      <input matInput placeholder="Email" [formControl]="emailFormControl" [errorStateMatcher]="matcher" formControlName="noseque">
-      <mat-hint>Errors appear instantly!</mat-hint>
-      <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-        Please enter a valid email address
-      </mat-error>
-      <mat-error *ngIf="emailFormControl.hasError('required')">
-        Email is <strong>required</strong>
-      </mat-error>
-    </mat-form-field> -->
-
-    <mat-form-field class="example-full-width">
-        <input [ngClass]="{'error': isValid('email')}" type="email" matInput placeholder="Email" formControlName="email">
+        <input [ngClass]="{'error': isValid('lastName')}" matInput placeholder="Last Name" formControlName="lastName" maxlength="15">
+        <mat-error *ngIf="form.hasError('required', 'lastName')">Required</mat-error>
+        <mat-error *ngIf="form.hasError('minlength', 'lastName')">Minimum length 3 characters</mat-error>  
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
-        <input [ngClass]="{'error': isValid('password')}" type="password" matInput placeholder="Password" formControlName="password">
+        <input [ngClass]="{'error': isValid('email')}" type="email" matInput placeholder="Email" formControlName="email" maxlength="25">
+        <mat-error *ngIf="form.hasError('required', 'email') || form.hasError('invalidEmail', 'email')">Invalid Email</mat-error>
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
-        <input [ngClass]="{'error': isValid('confirmPassword')}" type="password" matInput placeholder="Confirm Password" formControlName="confirmPassword">
+        <input [ngClass]="{'error': isValid('password')}" type="password" matInput placeholder="Password" formControlName="password" maxlength="15">
+        <mat-error *ngIf="form.hasError('required', 'password')">Required</mat-error>
+        <mat-error *ngIf="form.hasError('minlength', 'password')">Minimum length 3 characters</mat-error>  
     </mat-form-field>
-    <br>
-    <span *ngIf="form.errors?.mismatchedFields" >Passwords do not match</span>
-    <br>
+
+    <!-- To compared the Passwords the custom directive confirm-validator is used -->
+    <mat-form-field class="example-full-width">
+        <input [ngClass]="{'error': isValid('confirmPassword')}" type="password" matInput placeholder="Confirm Password" formControlName="confirmPassword" appConfirmValidator="password" maxlength="15">
+        <mat-error *ngIf="form.hasError('required', 'confirmPassword')">Required</mat-error>
+        <mat-error *ngIf="form.hasError('notEqual', 'confirmPassword')">Passwords do not match</mat-error>
+    </mat-form-field>
+
     <button mat-raised-button color="primary">Register</button>
 
   </mat-card>
