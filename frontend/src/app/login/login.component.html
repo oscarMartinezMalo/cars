@@ -2,11 +2,11 @@
 
   <mat-card class="example-card card-login">
     <mat-form-field class="example-full-width">
-      <input [(ngModel)]="loginData.email" matInput placeholder="Email" type="email">
+      <input [(ngModel)]="loginData.email" matInput placeholder="Email" type="email" maxlength="25">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
-      <input [(ngModel)]="loginData.password" matInput placeholder="Password" type="password">
+      <input [(ngModel)]="loginData.password" matInput placeholder="Password" type="password" maxlength="15">
     </mat-form-field>
 
     <br>

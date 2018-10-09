@@ -1,30 +1,46 @@
-<div class="login-container">
-
+<form [formGroup]="formName" (ngSubmit)="updateName()" class="example-form">
   <mat-card class="example-card card-login">
     <mat-form-field class="example-full-width">
-      <input [(ngModel)]="updateUserName.firstName" matInput placeholder="First Name">
+      <input [ngClass]="{'error': isValid('firstName')}" matInput placeholder="First Name" formControlName="firstName"
+        maxlength="15">
+      <mat-error *ngIf="formName.hasError('required', 'firstName')">Required</mat-error>
+      <mat-error *ngIf="formName.hasError('minlength', 'firstName')">Minimum length 3 characters</mat-error>
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
-      <input [(ngModel)]="updateUserName.lastName"  matInput placeholder="Last Name">
-    </mat-form-field>
-    <br>
-    <button mat-raised-button color="primary" (click)="updateName()">Update Name</button>
-
-    <mat-form-field class="example-full-width">
-      <input [(ngModel)]="updateUserPassword.password" matInput placeholder="Current Password" type="password">
+      <input [ngClass]="{'error': isValid('lastName')}" matInput placeholder="First Name" formControlName="lastName"
+        maxlength="15">
+      <mat-error *ngIf="formName.hasError('required', 'lastName')">Required</mat-error>
+      <mat-error *ngIf="formName.hasError('minlength', 'lastName')">Minimum length 3 characters</mat-error>
     </mat-form-field>
 
-    <mat-form-field class="example-full-width">
-      <input [(ngModel)]="updateUserPassword.newPassword" matInput placeholder="New Password" type="password">
-    </mat-form-field>
-
-    <mat-form-field class="example-full-width">
-      <input [(ngModel)]="updateUserPassword.confirmPassword" matInput placeholder="Confirm Password" type="password">
-    </mat-form-field>
-
-    <br>
-    <button mat-raised-button color="primary" (click)="updatePassword()">Update Password</button>
+    <button mat-raised-button color="primary">Update Name</button>
   </mat-card>
+</form>
 
-</div>
+<form [formGroup]="formPassword" (ngSubmit)="updatePassword()" class="example-form">
+   <mat-card class="example-card card-login">
+   <mat-form-field class="example-full-width">
+      <input [ngClass]="{'error': isValid('currentPassword')}" type="password" matInput placeholder="Current Password" formControlName="currentPassword"
+        maxlength="15">
+      <mat-error *ngIf="formPassword.hasError('required', 'currentPassword')">Required</mat-error>
+      <mat-error *ngIf="formPassword.hasError('minlength', 'currentPassword')">Minimum length 3 characters</mat-error>
+    </mat-form-field>
+
+     <mat-form-field class="example-full-width">
+      <input [ngClass]="{'error': isValid('newPassword')}" type="password" matInput placeholder="New Password" formControlName="newPassword"
+        maxlength="15">
+      <mat-error *ngIf="formPassword.hasError('required', 'newPassword')">Required</mat-error>
+      <mat-error *ngIf="formPassword.hasError('minlength', 'newPassword')">Minimum length 3 characters</mat-error>
+    </mat-form-field>
+
+   <mat-form-field class="example-full-width">
+      <input [ngClass]="{'error': isValid('confirmPassword')}" type="password" matInput placeholder="Confirm Password" formControlName="confirmPassword"
+      appConfirmValidator="newPassword"  maxlength="15">
+      <mat-error *ngIf="formPassword.hasError('required', 'confirmPassword')">Required</mat-error>
+      <mat-error *ngIf="formPassword.hasError('notEqual', 'confirmPassword')">Passwords do not match</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary">Update Password</button>
+  </mat-card>
+</form>

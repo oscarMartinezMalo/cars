@@ -72,7 +72,15 @@ const authMiddleware = (req, res, next) => {
         next();
     } else {
         res.status(403).json({ error: { message: "You have to be logged to see beyond the walls" } });
-        //next( new Error('You have to be logged to see it'));
+    }
+};
+
+// Checks if user is logged in, by checking if user is stored in session.
+const PassCheckMiddleware = (req, res, next) => {
+    if (req.password && req.session.user) {
+        next();
+    } else {
+        res.status(403).json({ error: { message: "I think que el Current Password No te lo sabes !!!" } });
     }
 };
 
@@ -80,8 +88,7 @@ const authMiddleware = (req, res, next) => {
 api.get('/cars/:id', authMiddleware, (req, resp) => {
 
     // Console log to check is user loggedIn
-    req.session.user ? console.log("Old session") : console.log("New session");
-
+   // req.session.user ? console.log("Old session") : console.log("New session");
     let id = req.params.id;
     let sql = 'SELECT * FROM  `cars`.`doral-hundai` WHERE  `stock-number` =' + "'" + id + "'";
     let query = db.query(sql, (err, result) => {
@@ -135,7 +142,6 @@ auth.post('/login', [
     })
 })
 
-
 auth.post('/signup', [
     // Validating fields comming front the frontend
     check('firstName', "Not a valid First Name")
@@ -182,7 +188,7 @@ auth.post('/signup', [
             if (err) {
                 next(err);
             } else {
-                db.query('SELECT LAST_INSERT_ID() AS user_id', function (error, res, fields) {
+                db.query('SELECT LAST_INSERT_ID() AS user_id', (error, res, fields) => {
                     if (error) {
                         next(err);
                     } else {
@@ -197,6 +203,7 @@ auth.post('/signup', [
 
     });
 
+
 auth.post('/logout', (req, res) => {
 
     req.session.destroy(function (err) {
@@ -207,6 +214,7 @@ auth.post('/logout', (req, res) => {
     // sessionStore.destroy("dgmnoMlC0SlOZDlTJuLeiuRSzYG1S0FO",(error)=>{});
     res.status(200).send({});
 });
+
 
 function findUserByEmail(email) {
     return new Promise((resolve, reject) => {
@@ -228,11 +236,12 @@ function findUserByEmail(email) {
 auth.post('/updateName', authMiddleware, [
     // Validation the fields comming front the frontend
     check('firstName', "Not a valid First Name")
-        .isLength({ min: 3 })
+        .isLength({ min: 3, max: 15 })
+        .not().isEmpty()
         .trim()
         .escape(),
     check('lastName', "Not a valid Last Name")
-        .isLength({ min: 3 })
+        .isLength({ min: 3, max: 15 })
         .not().isEmpty()
         .trim()
         .escape()
@@ -247,18 +256,80 @@ auth.post('/updateName', authMiddleware, [
         // If there is no any Error continue and Update the  User
         let user = req.body;
         let sql = 'UPDATE `cars`.`users` SET firstName = ' + "'" + user.firstName + "'" + ', lastName= ' + "'" + user.lastName + "'" + ' WHERE  id =' + "'" + req.session.user + "'";
-        console.log(sql);
+
         db.query(sql, (err, results) => {
             if (err) {
                 next(err);
             } else {
-                resp.status(200).send({ success: "Ok" });
+                resp.status(200).send({ succeed: "Successfully updated" });
 
             }
         })
-
     });
 
+auth.post('/updatePassword', authMiddleware, [
+    // Validation the fields comming front the frontend
+    check('currentPassword', "Not a valid Current Password")
+        .isLength({ min: 3, max: 15 })
+        .not().isEmpty()
+        .trim()
+        .escape(),
+    check('newPassword', "Not a valid New Password")
+        .isLength({ min: 3, max: 15 })
+        .not().isEmpty()
+        .trim()
+        .escape(),
+    check('confirmPassword', "Not a valid New Password")
+        .isLength({ min: 3, max: 15 })
+        .not().isEmpty()
+        .trim()
+        .escape()
+],
+    (req, resp, next) => {
+        console.log("whatup");
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return resp.status(422).json({ error: { message: errors.array()[0].msg } });
+        }
+
+        let user = req.body;
+        // Query to select the salt and hash from the user session
+        let sql = 'SELECT `cars`.`users`.`passwordHash`, `cars`.`users`.passwordSalt FROM `cars`.`users` WHERE id ='+ "'" + req.session.user + "'";
+
+        db.query(sql, (err, results) => {
+            if (err) {
+                next(err);
+            } else {
+                    var dbUser = results[0];
+                    var hashSalt = sha512(user.currentPassword, dbUser.passwordSalt);
+    
+                    if (dbUser.passwordHash == hashSalt.hash) {
+                       //Update the password
+                    }
+                    else {
+                        // resp.status(422).json({ message: 'Incorrect password' });
+                        const error = new Error("Uhh Ohh Incorrect Current password");
+                        error.status = 409;
+                        next(error);
+                    }
+
+            }
+        })
+        // If there is no any Error continue and Update the  User
+
+        // let sql = 'UPDATE `cars`.`users` SET firstName = ' + "'" + user.firstName + "'" + ', lastName= ' + "'" + user.lastName + "'" + ' WHERE  id =' + "'" + req.session.user + "'";
+        // console.log(sql);
+        // db.query(sql, (err, results) => {
+        //     if (err) {
+        //         next(err);
+        //     } else {
+        //         resp.status(200).send({ succeed: "Successfully updated" });
+
+        //     }
+        // })
+
+    });
 
 // Pass the middleWare if you wanna ask if the user is logged before executing the request
 auth.get('/getUserInfo', authMiddleware, (req, resp) => {
@@ -269,14 +340,6 @@ auth.get('/getUserInfo', authMiddleware, (req, resp) => {
         resp.json(result);
     })
 })
-
-
-
-
-
-
-
-
 
 // ** Generate Salt
 function genRandomString(length) {

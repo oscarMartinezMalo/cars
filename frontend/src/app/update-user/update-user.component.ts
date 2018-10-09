@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -8,34 +9,50 @@ import { AuthService } from '../auth.service';
 })
 export class UpdateUserComponent implements OnInit {
 
-  constructor(private auth: AuthService) { }
+  formName;
+  formPassword;
 
+  constructor(private fb: FormBuilder, private auth: AuthService) {
+    this.formName = fb.group({
+      firstName: ['', [Validators.required, Validators.minLength(3)]],
+      lastName: ['', [Validators.required, Validators.minLength(3)]]
+    });
 
-  updateUserName ={ 
-    firstName:'',
-    lastName:''
-  } as {};
-  
-
-  updateUserPassword = {    
-    password:'',
-    newPassword:'',
-    confirmPassword:''
+    this.formPassword = fb.group({
+      currentPassword: ['', [Validators.required, Validators.minLength(3)]],
+      newPassword: ['', [Validators.required, Validators.minLength(3)]],
+      confirmPassword: ['', [Validators.required]]
+    })
+    console.log(this.formPassword);
   }
 
   ngOnInit() {
-   this.auth.getUserInfo();
-   this.auth.userCompName.subscribe(resp=>{     
-     this.updateUserName = resp;
-   })
+    this.auth.getUserInfo();
+    this.auth.userCompName.subscribe(resp => {
+      this.formName.setValue(resp);
+    })
   }
 
-  updateName(){   
-    this.auth.updateUserInfo(this.updateUserName);
+  isValid(control) {
+    let formToValidate;
+    if (String(control).includes("Password"))
+      formToValidate = this.formPassword;
+    else
+      formToValidate = this.formName;
+
+    return (formToValidate.controls[control].invalid && formToValidate.controls[control].touched);
   }
 
-  updatePassword(){
-    this.auth.updatePassword(this.updateUserPassword);
+  updateName() {
+    if (this.formName.valid) {
+      this.auth.updateUserInfo(this.formName.value);
+    }
+  }
+
+  updatePassword() {
+    if (this.formPassword.valid) {
+          this.auth.updatePassword(this.formPassword.value);
+    }
   }
 
 }

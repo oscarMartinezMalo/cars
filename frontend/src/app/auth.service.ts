@@ -39,7 +39,7 @@ export class AuthService {
         }).subscribe((res) => {
             this.router.navigate(['/cars']);
         }, error => {
-            this.handleError(error);
+            this.handleMessages(error);
         });
     }
 
@@ -50,7 +50,7 @@ export class AuthService {
         }).subscribe(res => {
             this.authenticate(res);
         }, error => {
-            this.handleError(error);
+            this.handleMessages(error);
         });
     }
 
@@ -60,7 +60,7 @@ export class AuthService {
         }).subscribe(res => {
             this.authenticate(res);
         }, error => {
-            this.handleError(error);
+            this.handleMessages(error);
         });
     }
 
@@ -73,23 +73,21 @@ export class AuthService {
     getUserInfo(){
         let response = this.http.get(this.BASE_URL + '/getUserInfo', {
             withCredentials: true
-        }).subscribe(res => {     
-         
+        }).subscribe(res => {             
             this.userCompleteName = res.json()[0];
             this.userCompleteNameSubj.next(this.userCompleteName);
         }, error => {
-            this.handleError(error);
+            this.handleMessages(error);
         });
     }
 
     updateUserInfo(userInfo) {
         let response = this.http.post(this.BASE_URL + '/updateName', userInfo, {
             withCredentials: true
-        }).subscribe(res => {
-            // Name change Successfully
-            console.log(res.json());
+        }).subscribe(res => {            
+            this.handleMessages(res);
         }, error => {
-            this.handleError(error);
+            this.handleMessages(error);
         });
     }
 
@@ -97,15 +95,20 @@ export class AuthService {
         let response = this.http.post(this.BASE_URL + '/updatePassword', passWordInfo, {
             withCredentials: true
         }).subscribe(res => {
-            //Message (Password change successfully)
+            this.handleMessages(res);
         }, error => {
-            this.handleError(error);
+            this.handleMessages(error);
         });
     }
 
 
-    private handleError(error) {
-        let message = JSON.parse(error._body).error.message;
+    private handleMessages(error) {
+        let messageResp = error.json();
+        let message;
+        if(messageResp.succeed)
+            message = messageResp.succeed;
+        else
+            message = messageResp.error.message;
         this.snackBar.open(message, "close", { duration: 2000 });
     }
 
