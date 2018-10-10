@@ -56,7 +56,7 @@ db.connect(err => {
 api.get('/cars', (req, resp) => {
 
     // Console log to check is user loggedIn
-    req.session.user ? console.log("Session number " + req.session.user) : console.log("New session");
+    // req.session.user ? console.log("Session number " + req.session.user) : console.log("New session");
 
     //Select all the cars from the cars DB
     let sql = 'SELECT * FROM `cars`.`doral-hundai`';
@@ -286,7 +286,6 @@ auth.post('/updatePassword', authMiddleware, [
         .escape()
 ],
     (req, resp, next) => {
-        console.log("whatup");
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
@@ -299,47 +298,46 @@ auth.post('/updatePassword', authMiddleware, [
 
         db.query(sql, (err, results) => {
             if (err) {
-                next(err);
-            } else {
+                next(err);            } else {
+
                     var dbUser = results[0];
                     var hashSalt = sha512(user.currentPassword, dbUser.passwordSalt);
     
                     if (dbUser.passwordHash == hashSalt.hash) {
                        //Update the password
+                       var CurrentSalt = genRandomString(16); /* Gives us salt of length 16 */
+                       var CurrentHashSalt = sha512(user.newPassword, CurrentSalt);
+                       let sql = 'UPDATE `cars`.`users` SET passwordSalt = ' + "'" + CurrentHashSalt.salt + "'" + ', passwordHash= ' + "'" + CurrentHashSalt.hash + "'" + ' WHERE  id =' + "'" + req.session.user + "' and passwordHash =" + "'" + dbUser.passwordHash +"'";
+                        db.query(sql,(error, res) =>{
+                            if(error){
+                                next(error);
+                            }                                 
+                            else{
+                                resp.json({ succeed: "Password Successfully updated" });
+                            }
+                        })
                     }
                     else {
-                        // resp.status(422).json({ message: 'Incorrect password' });
                         const error = new Error("Uhh Ohh Incorrect Current password");
                         error.status = 409;
                         next(error);
                     }
-
+                
             }
         })
-        // If there is no any Error continue and Update the  User
-
-        // let sql = 'UPDATE `cars`.`users` SET firstName = ' + "'" + user.firstName + "'" + ', lastName= ' + "'" + user.lastName + "'" + ' WHERE  id =' + "'" + req.session.user + "'";
-        // console.log(sql);
-        // db.query(sql, (err, results) => {
-        //     if (err) {
-        //         next(err);
-        //     } else {
-        //         resp.status(200).send({ succeed: "Successfully updated" });
-
-        //     }
-        // })
-
     });
+
 
 // Pass the middleWare if you wanna ask if the user is logged before executing the request
 auth.get('/getUserInfo', authMiddleware, (req, resp) => {
-    console.log(req.session.user);
+
     let sql = 'SELECT `users`.`firstName`, `users`.`lastName` FROM  `cars`.`users` WHERE  `id` =' + "'" + req.session.user + "'";
     let query = db.query(sql, (err, result) => {
         if (err) throw err;
         resp.json(result);
     })
 })
+
 
 // ** Generate Salt
 function genRandomString(length) {
@@ -370,9 +368,9 @@ app.use((req, resp, next) => {
 })
 
 app.use((error, req, resp, next) => {
-    console.log(error.message);
+    // console.log(error.message);
     resp.status(error.status || 500).json({ error: { message: error.message } });
 });
 
-app.listen(3000, () => console.log("cars"));
+app.listen(3000, () => console.log("CarsProject"));
 

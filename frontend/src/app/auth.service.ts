@@ -77,6 +77,7 @@ export class AuthService {
             this.userCompleteName = res.json()[0];
             this.userCompleteNameSubj.next(this.userCompleteName);
         }, error => {
+            this.logout(); // If not logged go and delete the localStorage User 
             this.handleMessages(error);
         });
     }
@@ -87,6 +88,7 @@ export class AuthService {
         }).subscribe(res => {            
             this.handleMessages(res);
         }, error => {
+            this.logout(); // If not logged go and delete the localStorage User 
             this.handleMessages(error);
         });
     }
@@ -97,6 +99,8 @@ export class AuthService {
         }).subscribe(res => {
             this.handleMessages(res);
         }, error => {
+            //Ask if the session was wrong in that case execute logout otherwise dont logioout
+            // this.logout(); // If not logged go and delete the localStorage User 
             this.handleMessages(error);
         });
     }
