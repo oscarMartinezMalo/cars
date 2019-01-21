@@ -11,7 +11,7 @@ const uuidv1 = require('uuid/v1');
 
 const app = express();
 app.set('trust proxy', 1);
-// Cors is used to modifie and receive Cookies, you have to do the request with { withCredentials: true }
+// Cors is used to modified and receive Cookies, you have to do the request with { withCredentials: true }
 
 app.use(cors({
     origin: ['http://localhost:4200'], //the port my react app is running on.

@@ -105,7 +105,6 @@ export class AuthService {
         });
     }
 
-
     private handleMessages(error) {
         let messageResp = error.json();
         let message;
