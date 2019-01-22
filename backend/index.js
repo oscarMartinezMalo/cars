@@ -14,7 +14,8 @@ app.set('trust proxy', 1);
 // Cors is used to modified and receive Cookies, you have to do the request with { withCredentials: true }
 
 app.use(cors({
-    origin: ['http://localhost:4200'], //the port my react app is running on.
+    // origin: ['http://localhost:4200'], //the port my react app is running on.
+    origin: ['http://ec2-3-85-90-9.compute-1.amazonaws.com:3000'],
     credentials: true
 }));
 
@@ -32,7 +33,7 @@ var api = express.Router();
 var auth = express.Router();
 
 // Create Connection to mysql
-const db = mysql.createConnection({ host: "localhost", user: "root", password: "admin123", database: 'CARS' });
+const db = mysql.createConnection({ host: "localhost", user: "root", password: "admin123", database: 'cars' });
 var sessionStore = new MySQLStore({}, db);
 app.use(session({
     genid: function (req) {
