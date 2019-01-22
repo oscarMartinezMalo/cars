@@ -50,7 +50,7 @@ var api = _express2.default.Router();
 var auth = _express2.default.Router();
 
 // Create Connection to mysql
-var db = _mysql2.default.createConnection({ host: "localhost", user: "root", password: "admin123", database: 'CARS' });
+var db = _mysql2.default.createConnection({ host: "localhost", user: "root", password: "admin1231", database: 'CARS' });
 var sessionStore = new MySQLStore({}, db);
 app.use(session({
     genid: function genid(req) {
