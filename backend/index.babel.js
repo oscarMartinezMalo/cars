@@ -33,7 +33,8 @@ app.set('trust proxy', 1);
 // Cors is used to modified and receive Cookies, you have to do the request with { withCredentials: true }
 
 app.use((0, _cors2.default)({
-    origin: ['http://localhost:4200'], //the port my react app is running on.
+    // origin: ['http://localhost:4200'], //the port my react app is running on.
+    origin: ['http://ec2-3-85-90-9.compute-1.amazonaws.com:3000'],
     credentials: true
 }));
 
