@@ -15,7 +15,7 @@ app.set('trust proxy', 1);
 
 app.use(cors({
     // origin: ['http://localhost:4200'], //the port my react app is running on.
-    origin: ['http://ec2-3-85-90-9.compute-1.amazonaws.com:3000'],
+    origin: ['http://getcars.000webhostapp.com'],
     credentials: true
 }));
 
