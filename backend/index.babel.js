@@ -42,7 +42,7 @@ app.set('trust proxy', 1);
 // Allow all Cors
 app.use((0, _cors2.default)({
     credentials: true,
-    origin: true
+    origin: ['http://ec2-3-85-90-9.compute-1.amazonaws.com']
 }));
 
 app.use(_bodyParser2.default.urlencoded({ extended: false }));
