@@ -27,6 +27,8 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { UpdateUserComponent } from './update-user/update-user.component';
 import { ConfirmValidatorDirective } from "./ConfirmValidatorDirective";
+import { ForgotPassComponent } from './forgot-pass/forgot-pass.component';
+import { ResetPassComponent } from './reset-pass/reset-pass.component';
 
 var routes = [{
   path: '',
@@ -52,6 +54,15 @@ var routes = [{
 {
   path: 'update',
   component: UpdateUserComponent
+},
+{
+  path: 'forgotpass',
+  component: ForgotPassComponent
+}
+,
+{
+  path: 'resetpass',
+  component: ResetPassComponent
 }
 ];
 
@@ -66,7 +77,9 @@ var routes = [{
     RegisterComponent,
     LoginComponent,
     UpdateUserComponent,
-    ConfirmValidatorDirective
+    ConfirmValidatorDirective,
+    ForgotPassComponent,
+    ResetPassComponent
   ],
   imports: [
     BrowserModule,

@@ -9,6 +9,8 @@ import { Subject } from 'rxjs';
 export class AuthService {
 
     BASE_URL = 'http://localhost:3000/auth';
+    // BASE_URL = 'http://ec2-3-85-90-9.compute-1.amazonaws.com:3000/auth';
+
     EMAIL_KEY = 'email';
     // TOKEN_KEY ='token';
 

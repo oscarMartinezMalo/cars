@@ -13,12 +13,18 @@ const app = express();
 app.set('trust proxy', 1);
 // Cors is used to modified and receive Cookies, you have to do the request with { withCredentials: true }
 
-app.use(cors({
-    // origin: ['http://localhost:4200'], //the port my react app is running on.
-     origin: ['https://getcars.000webhostapp.com'],
-    credentials: true
-}));
+// app.use(cors({
+//     origin: ['http://localhost:4200'], //the port my react app is running on.
+//     //  origin: ['http://getcars.000webhostapp.com'],
+//     // origin: ['http://ec2-3-85-90-9.compute-1.amazonaws.com'],
+//     credentials: true
+// }));
 
+// Allow all Cors
+app.use(cors({
+    credentials: true,
+    origin: true
+}));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -89,7 +95,7 @@ const PassCheckMiddleware = (req, res, next) => {
 api.get('/cars/:id', authMiddleware, (req, resp) => {
 
     // Console log to check is user loggedIn
-   // req.session.user ? console.log("Old session") : console.log("New session");
+    // req.session.user ? console.log("Old session") : console.log("New session");
     let id = req.params.id;
     let sql = 'SELECT * FROM  `cars`.`doral-hundai` WHERE  `stock-number` =' + "'" + id + "'";
     let query = db.query(sql, (err, result) => {
@@ -295,35 +301,36 @@ auth.post('/updatePassword', authMiddleware, [
 
         let user = req.body;
         // Query to select the salt and hash from the user session
-        let sql = 'SELECT `cars`.`users`.`passwordHash`, `cars`.`users`.passwordSalt FROM `cars`.`users` WHERE id ='+ "'" + req.session.user + "'";
+        let sql = 'SELECT `cars`.`users`.`passwordHash`, `cars`.`users`.passwordSalt FROM `cars`.`users` WHERE id =' + "'" + req.session.user + "'";
 
         db.query(sql, (err, results) => {
             if (err) {
-                next(err);            } else {
+                next(err);
+            } else {
 
-                    var dbUser = results[0];
-                    var hashSalt = sha512(user.currentPassword, dbUser.passwordSalt);
-    
-                    if (dbUser.passwordHash == hashSalt.hash) {
-                       //Update the password
-                       var CurrentSalt = genRandomString(16); /* Gives us salt of length 16 */
-                       var CurrentHashSalt = sha512(user.newPassword, CurrentSalt);
-                       let sql = 'UPDATE `cars`.`users` SET passwordSalt = ' + "'" + CurrentHashSalt.salt + "'" + ', passwordHash= ' + "'" + CurrentHashSalt.hash + "'" + ' WHERE  id =' + "'" + req.session.user + "' and passwordHash =" + "'" + dbUser.passwordHash +"'";
-                        db.query(sql,(error, res) =>{
-                            if(error){
-                                next(error);
-                            }                                 
-                            else{
-                                resp.json({ succeed: "Password Successfully updated" });
-                            }
-                        })
-                    }
-                    else {
-                        const error = new Error("Uhh Ohh Incorrect Current password");
-                        error.status = 409;
-                        next(error);
-                    }
-                
+                var dbUser = results[0];
+                var hashSalt = sha512(user.currentPassword, dbUser.passwordSalt);
+
+                if (dbUser.passwordHash == hashSalt.hash) {
+                    //Update the password
+                    var CurrentSalt = genRandomString(16); /* Gives us salt of length 16 */
+                    var CurrentHashSalt = sha512(user.newPassword, CurrentSalt);
+                    let sql = 'UPDATE `cars`.`users` SET passwordSalt = ' + "'" + CurrentHashSalt.salt + "'" + ', passwordHash= ' + "'" + CurrentHashSalt.hash + "'" + ' WHERE  id =' + "'" + req.session.user + "' and passwordHash =" + "'" + dbUser.passwordHash + "'";
+                    db.query(sql, (error, res) => {
+                        if (error) {
+                            next(error);
+                        }
+                        else {
+                            resp.json({ succeed: "Password Successfully updated" });
+                        }
+                    })
+                }
+                else {
+                    const error = new Error("Uhh Ohh Incorrect Current password");
+                    error.status = 409;
+                    next(error);
+                }
+
             }
         })
     });
