@@ -8,8 +8,8 @@ import { Subject } from 'rxjs';
 @Injectable()
 export class AuthService {
 
-    // BASE_URL = 'http://localhost:3000/auth';
-    BASE_URL = 'http://ec2-3-95-160-125.compute-1.amazonaws.com/:3000/auth';
+    BASE_URL = 'http://localhost:3000/auth';
+    // BASE_URL = 'http://ec2-3-95-160-125.compute-1.amazonaws.com:3000/auth';
 
     EMAIL_KEY = 'email';
     // TOKEN_KEY ='token';
@@ -103,6 +103,16 @@ export class AuthService {
         }, error => {
             //Ask if the session was wrong in that case execute logout otherwise dont logioout
             // this.logout(); // If not logged go and delete the localStorage User 
+            this.handleMessages(error);
+        });
+    }
+
+     sendResetEmail(emailReset){
+        let response = this.http.post(this.BASE_URL + '/resetpassword', emailReset, {
+            withCredentials: true
+        }).subscribe(res => {
+            this.handleMessages(res);
+        }, error => {
             this.handleMessages(error);
         });
     }

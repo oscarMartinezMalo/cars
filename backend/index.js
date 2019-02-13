@@ -5,9 +5,12 @@ import bodyParser from 'body-parser';
 import crypto from 'crypto';
 import { check } from 'express-validator/check';
 import { validationResult } from 'express-validator/check';
+import nodemailer from 'nodemailer';
+import { getMaxListeners } from 'cluster';
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 const uuidv1 = require('uuid/v1');
+// const nodemailer = require("nodemailer");
 
 const app = express();
 app.set('trust proxy', 1);
@@ -94,7 +97,7 @@ const PassCheckMiddleware = (req, res, next) => {
 // Pass the middleWare if you wanna ask if the user is logged before executing the request
 api.get('/cars/:id', authMiddleware, (req, resp) => {
 
-    // Console log to check is user loggedIn
+    // Console log to check if user loggedIn
     // req.session.user ? console.log("Old session") : console.log("New session");
     let id = req.params.id;
     let sql = 'SELECT * FROM  `cars`.`doral-hundai` WHERE  `stock-number` =' + "'" + id + "'";
@@ -105,15 +108,18 @@ api.get('/cars/:id', authMiddleware, (req, resp) => {
 })
 
 auth.post('/login', [
-    check('email', "This is not a valid email").isEmail()
+    check('email', "This is not a valid email")
+        .isEmail()
         .normalizeEmail(),
-    check('password', "Password must have 5 Characters").isLength({ min: 5 })
+    check('password', "Password must have 5 Characters")
+        .isLength({ min: 5 })
 ], (req, resp, next) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return resp.status(422).json({ error: { message: errors.array()[0].msg } });
     }
+    console.log(req.body);
     var user = req.body;
     let sql = 'SELECT * FROM `cars`.`users` WHERE email ="' + user.email + '"';
 
@@ -213,12 +219,17 @@ auth.post('/signup', [
 
 auth.post('/logout', (req, res) => {
 
-    req.session.destroy(function (err) {
-        // cannot access session here
-        if (err) throw err;
-    });
+
+    // req.session.destroy(function (err) {
+    //     // cannot access session here
+    //     if (err) throw err;
+    // });
     // You can delete the User session with the code below
+
+    sessionStore.destroy(req.session.id, (err) => { throw err; });
+    req.session.destroy((err) => { if (err) throw err; });
     // sessionStore.destroy("dgmnoMlC0SlOZDlTJuLeiuRSzYG1S0FO",(error)=>{});
+
     res.status(200).send({});
 });
 
@@ -274,6 +285,8 @@ auth.post('/updateName', authMiddleware, [
         })
     });
 
+
+
 auth.post('/updatePassword', authMiddleware, [
     // Validation the fields comming front the frontend
     check('currentPassword', "Not a valid Current Password")
@@ -282,12 +295,12 @@ auth.post('/updatePassword', authMiddleware, [
         .trim()
         .escape(),
     check('newPassword', "Not a valid New Password")
-        .isLength({ min: 3, max: 15 })
+        .isLength({ min: 6, max: 15 })
         .not().isEmpty()
         .trim()
         .escape(),
     check('confirmPassword', "Not a valid New Password")
-        .isLength({ min: 3, max: 15 })
+        .isLength({ min: 6, max: 15 })
         .not().isEmpty()
         .trim()
         .escape()
@@ -364,6 +377,76 @@ function sha512(password, salt) {
         hash: value
     };
 };
+
+
+auth.post('/resetpassword', [
+    // check('email', "This is not a valid email")
+    //     .isEmail()
+    //     .normalizeEmail()
+],
+    (req, resp, next) => {
+        console.log("ima here");
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return resp.status(422).json({ error: { message: errors.array()[0].msg } });
+        }
+
+        var user = req.body;
+        let sql = 'SELECT * FROM `cars`.`users` WHERE email ="' + user.email + '"';
+
+        db.query(sql, (err, res) => {
+            if (err) {
+                next(err);
+            } else {
+
+                if (!res.length) {
+                    const error = new Error("Buajaja email not registered");
+                    error.status = 409;
+                    next(error);
+                }
+                else {
+
+                    sendTokenEmail(user.email);
+                    resp.json({ succeed: "Check your email to reset Password" });
+                }
+            }
+        })
+    });
+
+function sendTokenEmail(emailReset) {
+
+    let transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: 'yasiel.cu@gmail.com', // generated ethereal user
+            pass: 'Hola1hola' // generated ethereal password
+        },
+        tls: {
+            rejectUnauthorized: false
+        }
+    });
+
+    // setup email data with unicode symbols
+    let mailOptions = {
+        from: '"Fred Foo 👻" <yasiel.cu@gmail.com>', // sender address
+        to: emailReset, // list of receivers
+        subject: "Hello ✔", // Subject line
+        text: "Hello world?", // plain text body
+        html: `<b>Hello world?</b>
+        <br>
+        <b>http://localhost:4200/resetpass</b>` // html body
+    };
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions)
+
+    // let info = await transporter.sendMail(mailOptions)
+    // console.log("Message sent: %s", info.messageId);
+    // Preview only available when sending through an Ethereal account
+    // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+}
 
 app.use('/api', api)
 app.use('/auth', auth)

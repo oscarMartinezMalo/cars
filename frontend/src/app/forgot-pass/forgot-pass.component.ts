@@ -10,10 +10,10 @@ import { AuthService } from '../auth.service';
 })
 export class ForgotPassComponent implements OnInit {
 
-  form;
+  formForgotPass;
 
   constructor(private fb: FormBuilder, private auth: AuthService) {
-    this.form = fb.group({
+    this.formForgotPass = fb.group({
       email: ['', [Validators.required, this.emailValid()]]
     })
    }
@@ -21,15 +21,15 @@ export class ForgotPassComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSubmit() {
+  sendEmail() {
     // console.log(this.form.get("confirmPassword").errors );
-    if (this.form.valid) {
-      console.log(this.form.value.email);
+    if (this.formForgotPass.valid) {
+      this.auth.sendResetEmail(this.formForgotPass.value);
     }
   }
 
   isValid(control) {
-    return (this.form.controls[control].invalid && this.form.controls[control].touched);
+    return (this.formForgotPass.controls[control].invalid && this.formForgotPass.controls[control].touched);
   }
 
   emailValid() {

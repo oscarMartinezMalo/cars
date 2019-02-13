@@ -8,7 +8,7 @@
     <mat-form-field class="example-full-width">
       <input [(ngModel)]="loginData.password" matInput placeholder="Password" type="password" maxlength="15">
     </mat-form-field>
-
+    <button class="forgot-password" mat-button routerLink="/forgotpass" color="primary">Forgot your password?</button>
     <br>
     <button mat-raised-button color="primary" (click)="login()">Register</button>
   </mat-card>
