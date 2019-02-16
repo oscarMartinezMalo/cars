@@ -61,7 +61,7 @@ var routes = [{
 }
 ,
 {
-  path: 'resetpass',
+  path: 'resetpass/:token',
   component: ResetPassComponent
 }
 ];

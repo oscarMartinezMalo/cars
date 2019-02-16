@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
+import { ActivatedRoute } from '@angular/router';
+import { tokenKey } from '@angular/core/src/view';
 
 @Component({
   selector: 'app-reset-pass',
@@ -11,7 +13,7 @@ export class ResetPassComponent implements OnInit {
 
   formPassword;
 
-  constructor(private fb: FormBuilder, private auth: AuthService) {
+  constructor(private fb: FormBuilder, private auth: AuthService, private route: ActivatedRoute) {
 
     this.formPassword = fb.group({
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -19,7 +21,8 @@ export class ResetPassComponent implements OnInit {
     })
   }
 
-  ngOnInit() {
+  ngOnInit(  ) {
+
   }
 
   isValid(control) {
@@ -31,10 +34,10 @@ export class ResetPassComponent implements OnInit {
   }
 
   updatePassword() {
+    this.formPassword.addControl('token', new FormControl(this.route.snapshot.params.token, Validators.required));
+
     if (this.formPassword.valid) {
-          //this.auth.updatePassword(this.formPassword.value);
-         // this.formPassword.reset();
-         alert("New Pass");
+      this.auth.forgotPasswordtoken(this.formPassword.value);         
     }
   }
 

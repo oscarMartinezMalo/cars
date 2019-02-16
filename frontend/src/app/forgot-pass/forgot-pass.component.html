@@ -3,7 +3,7 @@
   <mat-card class="example-card card-login">
     <mat-card-subtitle>Forgot your Password</mat-card-subtitle>
     <mat-form-field class="example-full-width">
-      <input [ngClass]="{'error': isValid('email')}" type="email" matInput placeholder="Email" formControlName="email" maxlength="25">
+      <input [ngClass]="{'error': isValid('email')}" type="email" matInput placeholder="Email" formControlName="email" maxlength="50">
       <mat-error *ngIf="formForgotPass.hasError('required', 'email') || formForgotPass.hasError('invalidEmail', 'email')">Invalid Email</mat-error>
     </mat-form-field>
 

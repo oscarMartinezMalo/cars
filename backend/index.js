@@ -110,6 +110,7 @@ api.get('/cars/:id', authMiddleware, (req, resp) => {
 auth.post('/login', [
     check('email', "This is not a valid email")
         .isEmail()
+        .isLength({ max: 50 })
         .normalizeEmail(),
     check('password', "Password must have 5 Characters")
         .isLength({ min: 5 })
@@ -166,8 +167,9 @@ auth.post('/signup', [
         .not().isEmpty()
         .trim()
         .escape(),
-    check('email', "This is not a valid email").isEmail()
-        .isLength({ max: 15 })
+    check('email', "This is not a valid email")
+        .isEmail()
+        .isLength({ max: 50 })
         .normalizeEmail(),
     check('email')
         .custom(value => {
@@ -216,7 +218,6 @@ auth.post('/signup', [
 
     });
 
-
 auth.post('/logout', (req, res) => {
 
 
@@ -226,13 +227,12 @@ auth.post('/logout', (req, res) => {
     // });
     // You can delete the User session with the code below
 
-    sessionStore.destroy(req.session.id, (err) => { throw err; });
+    // sessionStore.destroy(req.session.id, (err) => { throw err; });
     req.session.destroy((err) => { if (err) throw err; });
     // sessionStore.destroy("dgmnoMlC0SlOZDlTJuLeiuRSzYG1S0FO",(error)=>{});
 
     res.status(200).send({});
 });
-
 
 function findUserByEmail(email) {
     return new Promise((resolve, reject) => {
@@ -249,7 +249,6 @@ function findUserByEmail(email) {
         })
     })
 }
-
 
 auth.post('/updateName', authMiddleware, [
     // Validation the fields comming front the frontend
@@ -284,8 +283,6 @@ auth.post('/updateName', authMiddleware, [
             }
         })
     });
-
-
 
 auth.post('/updatePassword', authMiddleware, [
     // Validation the fields comming front the frontend
@@ -348,17 +345,16 @@ auth.post('/updatePassword', authMiddleware, [
         })
     });
 
-
 // Pass the middleWare if you wanna ask if the user is logged before executing the request
-auth.get('/getUserInfo', authMiddleware, (req, resp) => {
+auth.get('/getUserInfo', authMiddleware,
+    (req, resp) => {
 
-    let sql = 'SELECT `users`.`firstName`, `users`.`lastName` FROM  `cars`.`users` WHERE  `id` =' + "'" + req.session.user + "'";
-    let query = db.query(sql, (err, result) => {
-        if (err) throw err;
-        resp.json(result);
+        let sql = 'SELECT `users`.`firstName`, `users`.`lastName` FROM  `cars`.`users` WHERE  `id` =' + "'" + req.session.user + "'";
+        let query = db.query(sql, (err, result) => {
+            if (err) throw err;
+            resp.json(result);
+        })
     })
-})
-
 
 // ** Generate Salt
 function genRandomString(length) {
@@ -378,14 +374,12 @@ function sha512(password, salt) {
     };
 };
 
-
-auth.post('/resetpassword', [
-    // check('email', "This is not a valid email")
-    //     .isEmail()
-    //     .normalizeEmail()
+auth.post('/resetpasswordEmail', [
+    check('email', "This is not a valid email")
+        .isEmail()
+        .normalizeEmail()
 ],
     (req, resp, next) => {
-        console.log("ima here");
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return resp.status(422).json({ error: { message: errors.array()[0].msg } });
@@ -394,27 +388,27 @@ auth.post('/resetpassword', [
         var user = req.body;
         let sql = 'SELECT * FROM `cars`.`users` WHERE email ="' + user.email + '"';
 
-        db.query(sql, (err, res) => {
+        db.query(sql, (err, user) => {
             if (err) {
                 next(err);
             } else {
 
-                if (!res.length) {
+                if (!user.length) {
                     const error = new Error("Buajaja email not registered");
                     error.status = 409;
                     next(error);
                 }
                 else {
-
-                    sendTokenEmail(user.email);
+                    sendTokenEmail(user[0], req);
+                    // destroy the session so is removed from the response
+                    req.session = null;
                     resp.json({ succeed: "Check your email to reset Password" });
                 }
             }
         })
     });
 
-function sendTokenEmail(emailReset) {
-
+function sendTokenEmail(user, req) {
     let transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 587,
@@ -430,23 +424,72 @@ function sendTokenEmail(emailReset) {
 
     // setup email data with unicode symbols
     let mailOptions = {
-        from: '"Fred Foo 👻" <yasiel.cu@gmail.com>', // sender address
-        to: emailReset, // list of receivers
-        subject: "Hello ✔", // Subject line
+        from: '"Cars 👻" <yasiel.cu@gmail.com>', // sender address
+        to: user.email, // list of receivers
+        subject: "Reset Cars Password ✔", // Subject line
         text: "Hello world?", // plain text body
-        html: `<b>Hello world?</b>
+        html: `<b>Click on the link to reset the password</b>
         <br>
-        <b>http://localhost:4200/resetpass</b>` // html body
+        <b>http://localhost:4200/resetpass/${req.session.id}</b>` // html body
     };
 
-    // send mail with defined transport object
+    // Send mail with defined transport object
     transporter.sendMail(mailOptions)
-
-    // let info = await transporter.sendMail(mailOptions)
-    // console.log("Message sent: %s", info.messageId);
-    // Preview only available when sending through an Ethereal account
-    // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    req.session.user = user.id;
+    req.session.save(function (err) {
+        // session saved
+    })
 }
+
+auth.post('/forgotPassword', [
+    // Validation the fields comming front the frontend
+    check('newPassword', "Not a valid New Password")
+        .isLength({ min: 6, max: 15 })
+        .not().isEmpty()
+        .trim()
+        .escape(),
+    check('confirmPassword', "Not a valid New Password")
+        .isLength({ min: 6, max: 15 })
+        .not().isEmpty()
+        .trim()
+        .escape(),
+    check('token', "Something went wrong ")
+        .not().isEmpty()
+        .trim()
+        .escape()
+],
+    (req, resp, next) => {
+
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return resp.status(422).json({ error: { message: errors.array()[0].msg } });
+        }
+
+        let userForm = req.body;
+        // Query to select the salt and hash from the user session
+        let sql = 'SELECT `cars`.`sessions`.`data` FROM `cars`.`sessions` WHERE session_id =' + "'" + userForm.token + "'";
+
+        db.query(sql, (err, results) => {
+            if (err) {
+                next(err);
+            } else {
+                if (!results.length) {
+                    const error = new Error("The time to reset the password expired");
+                    error.status = 409;
+                    next(error);
+                } else {
+                    let userId = JSON.parse(results[0].data).user;
+                    
+                }
+
+            }
+        })
+
+        // query DB update user.password where token = sessio_id get userid
+        //send response Password updated successfully
+        // clientside redirect to login
+    })
 
 app.use('/api', api)
 app.use('/auth', auth)

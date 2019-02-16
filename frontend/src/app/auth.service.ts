@@ -108,12 +108,23 @@ export class AuthService {
     }
 
      sendResetEmail(emailReset){
-        let response = this.http.post(this.BASE_URL + '/resetpassword', emailReset, {
+        let response = this.http.post(this.BASE_URL + '/resetpasswordEmail', emailReset, {
             withCredentials: true
         }).subscribe(res => {
             this.handleMessages(res);
         }, error => {
             this.handleMessages(error);
+        });
+    }
+
+    forgotPasswordtoken(tokenPassword){
+        let response = this.http.post(this.BASE_URL + '/forgotPassword', tokenPassword, {
+            withCredentials: true
+        }).subscribe(res => {
+            this.router.navigate(['/login']);
+        }, error => {
+            this.router.navigate(['/']);
+            this.handleMessages("Couldn't update the password");
         });
     }
 

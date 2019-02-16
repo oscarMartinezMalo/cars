@@ -14,7 +14,7 @@
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
-        <input [ngClass]="{'error': isValid('email')}" type="email" matInput placeholder="Email" formControlName="email" maxlength="25">
+        <input [ngClass]="{'error': isValid('email')}" type="email" matInput placeholder="Email" formControlName="email" maxlength="50">
         <mat-error *ngIf="form.hasError('required', 'email') || form.hasError('invalidEmail', 'email')">Invalid Email</mat-error>
     </mat-form-field>
 
