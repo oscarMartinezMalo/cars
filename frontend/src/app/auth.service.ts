@@ -107,11 +107,12 @@ export class AuthService {
         });
     }
 
-     sendResetEmail(emailReset){
+    sendResetEmail(emailReset){
         let response = this.http.post(this.BASE_URL + '/resetpasswordEmail', emailReset, {
             withCredentials: true
         }).subscribe(res => {
             this.handleMessages(res);
+            this.router.navigate(['/']);
         }, error => {
             this.handleMessages(error);
         });
@@ -121,10 +122,11 @@ export class AuthService {
         let response = this.http.post(this.BASE_URL + '/forgotPassword', tokenPassword, {
             withCredentials: true
         }).subscribe(res => {
+            this.handleMessages(res);
             this.router.navigate(['/login']);
         }, error => {
-            this.router.navigate(['/']);
-            this.handleMessages("Couldn't update the password");
+            this.handleMessages(error);
+            this.router.navigate(['/']);   
         });
     }
 

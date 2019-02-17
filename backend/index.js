@@ -320,7 +320,8 @@ auth.post('/updatePassword', authMiddleware, [
 
                 var dbUser = results[0];
                 var hashSalt = sha512(user.currentPassword, dbUser.passwordSalt);
-
+                // Checking if the current password is the same as in the dataBase 
+                // if is the same  you can update the password with a new one
                 if (dbUser.passwordHash == hashSalt.hash) {
                     //Update the password
                     var CurrentSalt = genRandomString(16); /* Gives us salt of length 16 */
@@ -467,8 +468,9 @@ auth.post('/forgotPassword', [
         }
 
         let userForm = req.body;
+        let tokenClientSide = userForm.token;
         // Query to select the salt and hash from the user session
-        let sql = 'SELECT `cars`.`sessions`.`data` FROM `cars`.`sessions` WHERE session_id =' + "'" + userForm.token + "'";
+        let sql = 'SELECT `cars`.`sessions`.`data` FROM `cars`.`sessions` WHERE session_id =' + "'" + tokenClientSide + "'";
 
         db.query(sql, (err, results) => {
             if (err) {
@@ -479,17 +481,30 @@ auth.post('/forgotPassword', [
                     error.status = 409;
                     next(error);
                 } else {
+                    // delete the session from the DB
+                    sessionStore.destroy(tokenClientSide, (error)=>{});
                     let userId = JSON.parse(results[0].data).user;
-                    
+                    updatePasswordById(userId, userForm.newPassword, resp );
                 }
 
             }
         })
-
-        // query DB update user.password where token = sessio_id get userid
-        //send response Password updated successfully
-        // clientside redirect to login
     })
+
+function updatePasswordById(userId, newPassword, resp) {
+    var CurrentSalt = genRandomString(16); /* Gives us salt of length 16 */
+    var CurrentHashSalt = sha512(newPassword, CurrentSalt);
+    let sql = 'UPDATE `cars`.`users` SET passwordSalt = ' + "'" + CurrentHashSalt.salt + "'" + ', passwordHash= ' + "'" + CurrentHashSalt.hash + "'" + ' WHERE  id =' + "'" + userId + "'";
+    db.query(sql, (error, res) => {
+        if (error) {
+            next(error);
+        }
+        else {
+            
+            resp.json({ succeed: "Password Successfully updated" });
+        }
+    })
+}
 
 app.use('/api', api)
 app.use('/auth', auth)
