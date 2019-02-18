@@ -51,8 +51,9 @@ app.use(session({
     secret: 'asdasdasd',
     store: sessionStore,    // this set the session storage to the dataBase, by default the sessions are storage in memory not recomended in production
     resave: false,
+    // rolling: true; //Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown.
     saveUninitialized: false, //If is false is not gonna persist in the dataBase
-    cookie: { maxAge: 60000 } // 60000 is one minute
+    cookie: { maxAge: 60 * 60 * 1000 } // 60000 is one minute
 }))
 
 //Function to generate a new session ID
@@ -203,13 +204,19 @@ auth.post('/signup', [
             if (err) {
                 next(err);
             } else {
-                db.query('SELECT LAST_INSERT_ID() AS user_id', (error, res, fields) => {
+                db.query('SELECT LAST_INSERT_ID() AS user_id', (error, result, fields) => {
                     if (error) {
                         next(err);
                     } else {
-                        let dbUserId = res[0].user_id;
-                        req.session.user = dbUserId;    //Create session with user = DatabaseUserID so you can Search by ID when you need it
-                        resp.json({ email: user.email });
+                        if (!result.length) {
+                            const error = new Error("Try to login if you can't sign up again");
+                            error.status = 409;
+                            next(error);
+                        } else {
+                            let dbUserId = result[0].user_id;
+                            req.session.user = dbUserId;    //Create session with user = DatabaseUserID so you can Search by ID when you need it
+                            resp.json({ email: user.email });
+                        }
                     }
                 });
 
@@ -219,7 +226,6 @@ auth.post('/signup', [
     });
 
 auth.post('/logout', (req, res) => {
-
 
     // req.session.destroy(function (err) {
     //     // cannot access session here
@@ -279,7 +285,6 @@ auth.post('/updateName', authMiddleware, [
                 next(err);
             } else {
                 resp.status(200).send({ succeed: "Successfully updated" });
-
             }
         })
     });
@@ -317,29 +322,37 @@ auth.post('/updatePassword', authMiddleware, [
             if (err) {
                 next(err);
             } else {
-
-                var dbUser = results[0];
-                var hashSalt = sha512(user.currentPassword, dbUser.passwordSalt);
-                // Checking if the current password is the same as in the dataBase 
-                // if is the same  you can update the password with a new one
-                if (dbUser.passwordHash == hashSalt.hash) {
-                    //Update the password
-                    var CurrentSalt = genRandomString(16); /* Gives us salt of length 16 */
-                    var CurrentHashSalt = sha512(user.newPassword, CurrentSalt);
-                    let sql = 'UPDATE `cars`.`users` SET passwordSalt = ' + "'" + CurrentHashSalt.salt + "'" + ', passwordHash= ' + "'" + CurrentHashSalt.hash + "'" + ' WHERE  id =' + "'" + req.session.user + "' and passwordHash =" + "'" + dbUser.passwordHash + "'";
-                    db.query(sql, (error, res) => {
-                        if (error) {
-                            next(error);
-                        }
-                        else {
-                            resp.json({ succeed: "Password Successfully updated" });
-                        }
-                    })
-                }
-                else {
-                    const error = new Error("Uhh Ohh Incorrect Current password");
+                if (!results.length) {
+                    const error = new Error("Error updating password, user not found");
                     error.status = 409;
                     next(error);
+                }
+                else {
+
+                    var dbUser = results[0];
+                    var hashSalt = sha512(user.currentPassword, dbUser.passwordSalt);
+                    // Checking if the current password is the same as in the dataBase 
+                    // if is the same  you can update the password with a new one
+                    if (dbUser.passwordHash == hashSalt.hash) {
+                        //Update the password
+                        var CurrentSalt = genRandomString(16); /* Gives us salt of length 16 */
+                        var CurrentHashSalt = sha512(user.newPassword, CurrentSalt);
+                        let sql = 'UPDATE `cars`.`users` SET passwordSalt = ' + "'" + CurrentHashSalt.salt + "'" + ', passwordHash= ' + "'" + CurrentHashSalt.hash + "'" + ' WHERE  id =' + "'" + req.session.user + "' and passwordHash =" + "'" + dbUser.passwordHash + "'";
+                        db.query(sql, (error, res) => {
+                            if (error) {
+                                next(error);
+                            }
+                            else {
+                                // resp.json({ succeed: "Password Successfully updated" });
+                                resp.status(200).send({ succeed: "Password Successfully updated" });
+                            }
+                        })
+                    }
+                    else {
+                        const error = new Error("Incorrect Current password");
+                        error.status = 409;
+                        next(error);
+                    }
                 }
 
             }
@@ -395,7 +408,7 @@ auth.post('/resetpasswordEmail', [
             } else {
 
                 if (!user.length) {
-                    const error = new Error("Buajaja email not registered");
+                    const error = new Error("Email not registered");
                     error.status = 409;
                     next(error);
                 }
@@ -428,7 +441,7 @@ function sendTokenEmail(user, req) {
         from: '"Cars 👻" <yasiel.cu@gmail.com>', // sender address
         to: user.email, // list of receivers
         subject: "Reset Cars Password ✔", // Subject line
-        text: "Hello world?", // plain text body
+        text: "This link is gonna expired in 15 minutes", // plain text body
         html: `<b>Click on the link to reset the password</b>
         <br>
         <b>http://localhost:4200/resetpass/${req.session.id}</b>` // html body
@@ -437,6 +450,7 @@ function sendTokenEmail(user, req) {
     // Send mail with defined transport object
     transporter.sendMail(mailOptions)
     req.session.user = user.id;
+    req.session.cookie.maxAge = 15 * 60 * 1000; // Session is gonna expired in 15 min
     req.session.save(function (err) {
         // session saved
     })
@@ -482,9 +496,9 @@ auth.post('/forgotPassword', [
                     next(error);
                 } else {
                     // delete the session from the DB
-                    sessionStore.destroy(tokenClientSide, (error)=>{});
+                    sessionStore.destroy(tokenClientSide, (error) => { });
                     let userId = JSON.parse(results[0].data).user;
-                    updatePasswordById(userId, userForm.newPassword, resp );
+                    updatePasswordById(userId, userForm.newPassword, resp);
                 }
 
             }
@@ -500,7 +514,7 @@ function updatePasswordById(userId, newPassword, resp) {
             next(error);
         }
         else {
-            
+
             resp.json({ succeed: "Password Successfully updated" });
         }
     })
