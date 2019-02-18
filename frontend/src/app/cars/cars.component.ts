@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { WebService } from '../web.service';
-// import { MatSnackBar } from '@angular/material';
+//import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 //import { Car } from '../car';
-// import { Http } from '@angular/http';
+//import { Http } from '@angular/http';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -17,7 +17,7 @@ export class CarsComponent implements OnInit {
   carsSubject = new Subject();
   ngOnInit() {
     var name = this.route.snapshot.params.id;
-    this.webService.getCars(name);    
+    this.webService.getCars(name);
   }
 
   searchTerm: string;

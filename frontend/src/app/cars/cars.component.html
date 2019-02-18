@@ -13,6 +13,7 @@
   </mat-card>
 </div>
 
-<mat-card *ngIf="((webService.cars | async | carFilter : searchTerm)?.length) == 0 " class="mat-card-warning">Not cars Founded, que te parece buahahaha</mat-card>
-<pagination-controls (pageChange)="pagination = $event"></pagination-controls>
-
+<mat-card *ngIf="((webService.cars | async | carFilter : searchTerm)?.length) == 0 " class="mat-card-warning">Not cars Founded</mat-card>
+<mat-card  >
+  <pagination-controls  (pageChange)="pagination = $event" maxSize="4" previousLabel="Prev" nextLabel="Next" class="pagination"></pagination-controls>
+</mat-card>

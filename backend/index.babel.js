@@ -22,22 +22,29 @@ var _crypto2 = _interopRequireDefault(_crypto);
 
 var _check = require('express-validator/check');
 
+var _nodemailer = require('nodemailer');
+
+var _nodemailer2 = _interopRequireDefault(_nodemailer);
+
+var _cluster = require('cluster');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 var uuidv1 = require('uuid/v1');
+// const nodemailer = require("nodemailer");
 
 var app = (0, _express2.default)();
 app.set('trust proxy', 1);
 // Cors is used to modified and receive Cookies, you have to do the request with { withCredentials: true }
 
-// app.use(cors({
-//     origin: ['http://localhost:4200'], //the port my react app is running on.
-//     //  origin: ['http://getcars.000webhostapp.com'],
-//     // origin: ['http://ec2-3-85-90-9.compute-1.amazonaws.com'],
-//     credentials: true
-// }));
+app.use((0, _cors2.default)({
+    //     origin: ['http://localhost:4200'], //the port my react app is running on.
+    //     //  origin: ['http://getcars.000webhostapp.com'],
+    origin: ['http://ec2-3-95-160-125.compute-1.amazonaws.com']
+    //     credentials: true
+}));
 
 // Allow all Cors
 app.use((0, _cors2.default)({
@@ -67,8 +74,9 @@ app.use(session({
     secret: 'asdasdasd',
     store: sessionStore, // this set the session storage to the dataBase, by default the sessions are storage in memory not recomended in production
     resave: false,
+    // rolling: true; //Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown.
     saveUninitialized: false, //If is false is not gonna persist in the dataBase
-    cookie: { maxAge: 60000 // 60000 is one minute
+    cookie: { maxAge: 60 * 60 * 1000 // 60000 is one minute
     } }));
 
 //Function to generate a new session ID
@@ -115,7 +123,7 @@ var PassCheckMiddleware = function PassCheckMiddleware(req, res, next) {
 // Pass the middleWare if you wanna ask if the user is logged before executing the request
 api.get('/cars/:id', authMiddleware, function (req, resp) {
 
-    // Console log to check is user loggedIn
+    // Console log to check if user loggedIn
     // req.session.user ? console.log("Old session") : console.log("New session");
     var id = req.params.id;
     var sql = 'SELECT * FROM  `cars`.`doral-hundai` WHERE  `stock-number` =' + "'" + id + "'";
@@ -125,12 +133,13 @@ api.get('/cars/:id', authMiddleware, function (req, resp) {
     });
 });
 
-auth.post('/login', [(0, _check.check)('email', "This is not a valid email").isEmail().normalizeEmail(), (0, _check.check)('password', "Password must have 5 Characters").isLength({ min: 5 })], function (req, resp, next) {
+auth.post('/login', [(0, _check.check)('email', "This is not a valid email").isEmail().isLength({ max: 50 }).normalizeEmail(), (0, _check.check)('password', "Password must have 5 Characters").isLength({ min: 5 })], function (req, resp, next) {
 
     var errors = (0, _check.validationResult)(req);
     if (!errors.isEmpty()) {
         return resp.status(422).json({ error: { message: errors.array()[0].msg } });
     }
+    console.log(req.body);
     var user = req.body;
     var sql = 'SELECT * FROM `cars`.`users` WHERE email ="' + user.email + '"';
 
@@ -166,7 +175,7 @@ auth.post('/login', [(0, _check.check)('email', "This is not a valid email").isE
 
 auth.post('/signup', [
 // Validating fields comming front the frontend
-(0, _check.check)('firstName', "Not a valid First Name").isLength({ min: 3, max: 15 }).trim().escape(), (0, _check.check)('lastName', "Not a valid Last Name").isLength({ min: 3, max: 15 }).not().isEmpty().trim().escape(), (0, _check.check)('email', "This is not a valid email").isEmail().isLength({ max: 15 }).normalizeEmail(), (0, _check.check)('email').custom(function (value) {
+(0, _check.check)('firstName', "Not a valid First Name").isLength({ min: 3, max: 15 }).trim().escape(), (0, _check.check)('lastName', "Not a valid Last Name").isLength({ min: 3, max: 15 }).not().isEmpty().trim().escape(), (0, _check.check)('email', "This is not a valid email").isEmail().isLength({ max: 50 }).normalizeEmail(), (0, _check.check)('email').custom(function (value) {
     return findUserByEmail(value).then(function (user) {
         return true;
     });
@@ -191,13 +200,19 @@ auth.post('/signup', [
         if (err) {
             next(err);
         } else {
-            db.query('SELECT LAST_INSERT_ID() AS user_id', function (error, res, fields) {
+            db.query('SELECT LAST_INSERT_ID() AS user_id', function (error, result, fields) {
                 if (error) {
                     next(err);
                 } else {
-                    var dbUserId = res[0].user_id;
-                    req.session.user = dbUserId; //Create session with user = DatabaseUserID so you can Search by ID when you need it
-                    resp.json({ email: user.email });
+                    if (!result.length) {
+                        var _error2 = new Error("Try to login if you can't sign up again");
+                        _error2.status = 409;
+                        next(_error2);
+                    } else {
+                        var dbUserId = result[0].user_id;
+                        req.session.user = dbUserId; //Create session with user = DatabaseUserID so you can Search by ID when you need it
+                        resp.json({ email: user.email });
+                    }
                 }
             });
         }
@@ -205,13 +220,18 @@ auth.post('/signup', [
 });
 
 auth.post('/logout', function (req, res) {
+    // req.session.destroy(function (err) {
+    //     // cannot access session here
+    //     if (err) throw err;
+    // });
+    // You can delete the User session with the code below
 
+    // sessionStore.destroy(req.session.id, (err) => { throw err; });
     req.session.destroy(function (err) {
-        // cannot access session here
         if (err) throw err;
     });
-    // You can delete the User session with the code below
     // sessionStore.destroy("dgmnoMlC0SlOZDlTJuLeiuRSzYG1S0FO",(error)=>{});
+
     res.status(200).send({});
 });
 
@@ -254,7 +274,7 @@ auth.post('/updateName', authMiddleware, [
 
 auth.post('/updatePassword', authMiddleware, [
 // Validation the fields comming front the frontend
-(0, _check.check)('currentPassword', "Not a valid Current Password").isLength({ min: 3, max: 15 }).not().isEmpty().trim().escape(), (0, _check.check)('newPassword', "Not a valid New Password").isLength({ min: 3, max: 15 }).not().isEmpty().trim().escape(), (0, _check.check)('confirmPassword', "Not a valid New Password").isLength({ min: 3, max: 15 }).not().isEmpty().trim().escape()], function (req, resp, next) {
+(0, _check.check)('currentPassword', "Not a valid Current Password").isLength({ min: 3, max: 15 }).not().isEmpty().trim().escape(), (0, _check.check)('newPassword', "Not a valid New Password").isLength({ min: 6, max: 15 }).not().isEmpty().trim().escape(), (0, _check.check)('confirmPassword', "Not a valid New Password").isLength({ min: 6, max: 15 }).not().isEmpty().trim().escape()], function (req, resp, next) {
     var errors = (0, _check.validationResult)(req);
 
     if (!errors.isEmpty()) {
@@ -269,26 +289,34 @@ auth.post('/updatePassword', authMiddleware, [
         if (err) {
             next(err);
         } else {
-
-            var dbUser = results[0];
-            var hashSalt = sha512(user.currentPassword, dbUser.passwordSalt);
-
-            if (dbUser.passwordHash == hashSalt.hash) {
-                //Update the password
-                var CurrentSalt = genRandomString(16); /* Gives us salt of length 16 */
-                var CurrentHashSalt = sha512(user.newPassword, CurrentSalt);
-                var _sql = 'UPDATE `cars`.`users` SET passwordSalt = ' + "'" + CurrentHashSalt.salt + "'" + ', passwordHash= ' + "'" + CurrentHashSalt.hash + "'" + ' WHERE  id =' + "'" + req.session.user + "' and passwordHash =" + "'" + dbUser.passwordHash + "'";
-                db.query(_sql, function (error, res) {
-                    if (error) {
-                        next(error);
-                    } else {
-                        resp.json({ succeed: "Password Successfully updated" });
-                    }
-                });
-            } else {
-                var error = new Error("Uhh Ohh Incorrect Current password");
+            if (!results.length) {
+                var error = new Error("Error updating password, user not found");
                 error.status = 409;
                 next(error);
+            } else {
+
+                var dbUser = results[0];
+                var hashSalt = sha512(user.currentPassword, dbUser.passwordSalt);
+                // Checking if the current password is the same as in the dataBase 
+                // if is the same  you can update the password with a new one
+                if (dbUser.passwordHash == hashSalt.hash) {
+                    //Update the password
+                    var CurrentSalt = genRandomString(16); /* Gives us salt of length 16 */
+                    var CurrentHashSalt = sha512(user.newPassword, CurrentSalt);
+                    var _sql = 'UPDATE `cars`.`users` SET passwordSalt = ' + "'" + CurrentHashSalt.salt + "'" + ', passwordHash= ' + "'" + CurrentHashSalt.hash + "'" + ' WHERE  id =' + "'" + req.session.user + "' and passwordHash =" + "'" + dbUser.passwordHash + "'";
+                    db.query(_sql, function (error, res) {
+                        if (error) {
+                            next(error);
+                        } else {
+                            // resp.json({ succeed: "Password Successfully updated" });
+                            resp.status(200).send({ succeed: "Password Successfully updated" });
+                        }
+                    });
+                } else {
+                    var _error3 = new Error("Incorrect Current password");
+                    _error3.status = 409;
+                    next(_error3);
+                }
             }
         }
     });
@@ -320,6 +348,113 @@ function sha512(password, salt) {
         hash: value
     };
 };
+
+auth.post('/resetpasswordEmail', [(0, _check.check)('email', "This is not a valid email").isEmail().normalizeEmail()], function (req, resp, next) {
+    var errors = (0, _check.validationResult)(req);
+    if (!errors.isEmpty()) {
+        return resp.status(422).json({ error: { message: errors.array()[0].msg } });
+    }
+
+    var user = req.body;
+    var sql = 'SELECT * FROM `cars`.`users` WHERE email ="' + user.email + '"';
+
+    db.query(sql, function (err, user) {
+        if (err) {
+            next(err);
+        } else {
+
+            if (!user.length) {
+                var error = new Error("Email not registered");
+                error.status = 409;
+                next(error);
+            } else {
+                sendTokenEmail(user[0], req);
+                // destroy the session so is removed from the response
+                req.session = null;
+                resp.json({ succeed: "Check your email to reset Password" });
+            }
+        }
+    });
+});
+
+function sendTokenEmail(user, req) {
+    var transporter = _nodemailer2.default.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: 'yasiel.cu@gmail.com', // generated ethereal user
+            pass: 'Hola1hola' // generated ethereal password
+        },
+        tls: {
+            rejectUnauthorized: false
+        }
+    });
+
+    // setup email data with unicode symbols
+    var mailOptions = {
+        from: '"Cars 👻" <yasiel.cu@gmail.com>', // sender address
+        to: user.email, // list of receivers
+        subject: "Reset Cars Password ✔", // Subject line
+        text: "This link is gonna expired in 15 minutes", // plain text body
+        html: '<b>Click on the link to reset the password</b>\n        <br>\n        <b>http://localhost:4200/resetpass/' + req.session.id + '</b>' // html body
+    };
+
+    // Send mail with defined transport object
+    transporter.sendMail(mailOptions);
+    req.session.user = user.id;
+    req.session.cookie.maxAge = 15 * 60 * 1000; // Session is gonna expired in 15 min
+    req.session.save(function (err) {
+        // session saved
+    });
+}
+
+auth.post('/forgotPassword', [
+// Validation the fields comming front the frontend
+(0, _check.check)('newPassword', "Not a valid New Password").isLength({ min: 6, max: 15 }).not().isEmpty().trim().escape(), (0, _check.check)('confirmPassword', "Not a valid New Password").isLength({ min: 6, max: 15 }).not().isEmpty().trim().escape(), (0, _check.check)('token', "Something went wrong ").not().isEmpty().trim().escape()], function (req, resp, next) {
+
+    var errors = (0, _check.validationResult)(req);
+
+    if (!errors.isEmpty()) {
+        return resp.status(422).json({ error: { message: errors.array()[0].msg } });
+    }
+
+    var userForm = req.body;
+    var tokenClientSide = userForm.token;
+    // Query to select the salt and hash from the user session
+    var sql = 'SELECT `cars`.`sessions`.`data` FROM `cars`.`sessions` WHERE session_id =' + "'" + tokenClientSide + "'";
+
+    db.query(sql, function (err, results) {
+        if (err) {
+            next(err);
+        } else {
+            if (!results.length) {
+                var error = new Error("The time to reset the password expired");
+                error.status = 409;
+                next(error);
+            } else {
+                // delete the session from the DB
+                sessionStore.destroy(tokenClientSide, function (error) {});
+                var userId = JSON.parse(results[0].data).user;
+                updatePasswordById(userId, userForm.newPassword, resp);
+            }
+        }
+    });
+});
+
+function updatePasswordById(userId, newPassword, resp) {
+    var CurrentSalt = genRandomString(16); /* Gives us salt of length 16 */
+    var CurrentHashSalt = sha512(newPassword, CurrentSalt);
+    var sql = 'UPDATE `cars`.`users` SET passwordSalt = ' + "'" + CurrentHashSalt.salt + "'" + ', passwordHash= ' + "'" + CurrentHashSalt.hash + "'" + ' WHERE  id =' + "'" + userId + "'";
+    db.query(sql, function (error, res) {
+        if (error) {
+            next(error);
+        } else {
+
+            resp.json({ succeed: "Password Successfully updated" });
+        }
+    });
+}
 
 app.use('/api', api);
 app.use('/auth', auth);
