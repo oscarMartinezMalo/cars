@@ -16,12 +16,12 @@ const app = express();
 app.set('trust proxy', 1);
 // Cors is used to modified and receive Cookies, you have to do the request with { withCredentials: true }
 
-app.use(cors({
+// app.use(cors({
 //     origin: ['http://localhost:4200'], //the port my react app is running on.
 //     //  origin: ['http://getcars.000webhostapp.com'],
-    origin: ['http://ec2-3-95-160-125.compute-1.amazonaws.com'],
+//    origin: ['http://ec2-3-95-160-125.compute-1.amazonaws.com'],
 //     credentials: true
-}));
+// }));
 
 // Allow all Cors
 app.use(cors({
