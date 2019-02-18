@@ -385,11 +385,13 @@ function sendTokenEmail(user, req) {
         auth: {
             user: 'yasiel.cu@gmail.com', // generated ethereal user
             pass: 'Hola1hola' // generated ethereal password
-        },
-        tls: {
-            rejectUnauthorized: false
-        }
-    });
+
+            //Use this from local host
+            // ,
+            // tls: {
+            //     rejectUnauthorized: false
+            // }
+        } });
 
     // setup email data with unicode symbols
     var mailOptions = {
