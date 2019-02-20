@@ -103,7 +103,7 @@ export class AuthService {
         }, error => {
             //Ask if the session was wrong in that case execute logout otherwise dont logioout
             // this.logout(); // If not logged go and delete the localStorage User 
-            this.handleMessages(error);
+            this.handleMessages(error);        
         });
     }
 

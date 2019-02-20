@@ -51,8 +51,8 @@ export class UpdateUserComponent implements OnInit {
 
   updatePassword() {
     if (this.formPassword.valid) {
-          this.auth.updatePassword(this.formPassword.value);
-         // this.formPassword.reset();
+      this.auth.updatePassword(this.formPassword.value);
+      this.formPassword.reset();
     }
   }
 
