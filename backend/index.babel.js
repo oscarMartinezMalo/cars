@@ -465,7 +465,7 @@ app.use('/auth', auth);
 
 // Validation Block
 app.use(function (req, resp, next) {
-    var error = new Error("Not Found");
+    var error = new Error("Not  Found");
     error.status = 404;
     next(error);
 });
