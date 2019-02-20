@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+// import {APP_BASE_HREF} from '@angular/common';
 import { RouterModule } from "@angular/router";
 import { BrowserModule } from '@angular/platform-browser';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -18,6 +19,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { CookieService } from 'ngx-cookie-service';
 
 import { AppComponent } from './app.component';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { CarFilterPipe } from './car-filter.pipe';
 import { CarsComponent } from './cars/cars.component';
 import { NavComponent } from './nav/nav.component';
@@ -26,9 +28,9 @@ import { OneCarComponent } from './one-car/one-car.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { UpdateUserComponent } from './update-user/update-user.component';
-import { ConfirmValidatorDirective } from "./ConfirmValidatorDirective";
 import { ForgotPassComponent } from './forgot-pass/forgot-pass.component';
 import { ResetPassComponent } from './reset-pass/reset-pass.component';
+import { ConfirmValidatorDirective } from "./ConfirmValidatorDirective";
 
 var routes = [{
   path: '',
@@ -58,8 +60,7 @@ var routes = [{
 {
   path: 'forgotpass',
   component: ForgotPassComponent
-}
-,
+},
 {
   path: 'resetpass/:token',
   component: ResetPassComponent
@@ -77,9 +78,9 @@ var routes = [{
     RegisterComponent,
     LoginComponent,
     UpdateUserComponent,
-    ConfirmValidatorDirective,
     ForgotPassComponent,
-    ResetPassComponent
+    ResetPassComponent,
+    ConfirmValidatorDirective
   ],
   imports: [
     BrowserModule,
@@ -101,7 +102,10 @@ var routes = [{
     MatSortModule,
     MatIconModule
   ],
-  providers: [WebService, AuthService, CookieService],
+  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy } ,WebService, AuthService, CookieService],
+  // Used HTML5 PathLocationStrategy when you configured
+  // web server to serve /index.html for any incoming request, no matter what the path is.
+  // providers: [{provide: APP_BASE_HREF, useValue: '/my/app'},WebService, AuthService, CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

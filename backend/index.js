@@ -528,7 +528,7 @@ app.use('/auth', auth)
 
 // Validation Block
 app.use((req, resp, next) => {
-    const error = new Error("Not Found");
+    const error = new Error("Not  Found");
     error.status = 404;
     next(error);
 })

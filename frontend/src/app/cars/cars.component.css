@@ -37,4 +37,6 @@ mat-label {
     color: #3f51b5;
 }
 
-
+.pagination /deep/ .ngx-pagination {
+    padding-inline-start: 0px;
+  }

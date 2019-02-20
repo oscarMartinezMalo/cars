@@ -22,7 +22,6 @@ export class ResetPassComponent implements OnInit {
   }
 
   ngOnInit(  ) {
-
   }
 
   isValid(control) {

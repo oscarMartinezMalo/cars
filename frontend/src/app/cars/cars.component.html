@@ -15,5 +15,5 @@
 
 <mat-card *ngIf="((webService.cars | async | carFilter : searchTerm)?.length) == 0 " class="mat-card-warning">Not cars Founded</mat-card>
 <mat-card  >
-  <pagination-controls  (pageChange)="pagination = $event" maxSize="4" previousLabel="Prev" nextLabel="Next" class="pagination"></pagination-controls>
+  <pagination-controls  (pageChange)="pagination = $event" maxSize="4" previousLabel="" nextLabel="" class="pagination"></pagination-controls>
 </mat-card>
