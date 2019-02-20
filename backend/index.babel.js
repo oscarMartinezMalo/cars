@@ -399,7 +399,7 @@ function sendTokenEmail(user, req) {
         to: user.email, // list of receivers
         subject: "Reset Cars Password ✔", // Subject line
         text: "This link is gonna expired in 15 minutes", // plain text body
-        html: '<b>Click on the link to reset the password</b>\n        <br>\n        <b>http://ec2-3-95-160-125.compute-1.amazonaws.com/resetpass/' + req.session.id + '</b>'
+        html: '<b>Click on the link to reset the password</b>\n        <br>\n        <b>http://ec2-3-95-160-125.compute-1.amazonaws.com/index.html#/resetpass/' + req.session.id + '</b>'
         // Used in local host
         // <b>http://localhost:4200/resetpass/${req.session.id}</b> // html body
     };
