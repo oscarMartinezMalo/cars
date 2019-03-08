@@ -4,16 +4,40 @@
     <input [(ngModel)]="searchTerm" matInput placeholder="By Brand">
   </mat-form-field>
 </p>
-<div *ngFor="let car of webService.cars | async | carFilter : searchTerm | paginate: { itemsPerPage: 8, currentPage: pagination}">
+<div
+  *ngFor="let car of webService.cars | async | carFilter : searchTerm | paginate: { itemsPerPage: 8, currentPage: pagination}">
   <mat-card>
-    <mat-card-header [routerLink]="['/cars', car['stock-number']]" class="card-header">
-      {{car['car-name']}}
-    </mat-card-header>
-    <p> {{car['internet-price']}} </p>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title [routerLink]="['/cars', car['stock-number']]">
+          {{car['car-name']}}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{car['internet-price']}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+      
+    </mat-expansion-panel>
+
   </mat-card>
 </div>
 
-<mat-card *ngIf="((webService.cars | async | carFilter : searchTerm)?.length) == 0 " class="mat-card-warning">Not cars Founded</mat-card>
-<mat-card  >
-  <pagination-controls  (pageChange)="pagination = $event" maxSize="4" previousLabel="" nextLabel="" class="pagination"></pagination-controls>
+<mat-card *ngIf="((webService.cars | async | carFilter : searchTerm)?.length) == 0 " class="mat-card-warning">Not cars
+  Founded</mat-card>
+<mat-card>
+  <pagination-controls (pageChange)="pagination = $event" maxSize="4" previousLabel="" nextLabel="" class="pagination">
+  </pagination-controls>
 </mat-card>
+
+
+
+
+<!-- <mat-card-header [routerLink]="['/cars', car['stock-number']]" class="card-header">
+      {{car['car-name']}}
+    </mat-card-header>
+
+    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+    <p> {{car['internet-price']}} </p> -->

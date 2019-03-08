@@ -8,8 +8,9 @@ import { Subject } from 'rxjs';
 @Injectable()
 export class AuthService {
 
-    // BASE_URL = 'http://localhost:3000/auth';
-    BASE_URL = 'http://ec2-3-95-160-125.compute-1.amazonaws.com:3000/auth';
+    BASE_URL = 'http://localhost:3000/auth';
+    // BASE_URL = 'https://ec2-3-95-160-125.compute-1.amazonaws.com:3000/auth';
+    // BASE_URL = 'https://vehicleparty.com:3000/auth';
 
     EMAIL_KEY = 'email';
     // TOKEN_KEY ='token';
@@ -127,6 +128,22 @@ export class AuthService {
         }, error => {
             this.handleMessages(error);
             this.router.navigate(['/']);   
+        });
+    }
+
+    paypalPay(){
+        let response = this.http.post(this.BASE_URL + '/pay', {
+            withCredentials: true
+        }).subscribe(res => {
+
+            if( window.open(res.json().paypalUrl, "_blank")==null) {
+                alert("Desactive the popupblocker");
+            }
+
+       
+        }, error => {
+            this.handleMessages(error);
+            this.router.navigate(['/home']);   
         });
     }
 

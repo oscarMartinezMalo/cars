@@ -9,6 +9,7 @@ import { MatButtonModule, MatIconModule } from '@angular/material';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule, MatTableModule, MatPaginatorModule, MatSortModule } from '@angular/material';
+import {MatExpansionModule} from '@angular/material/expansion';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WebService } from './web.service';
 import { AuthService } from "./auth.service";
@@ -31,6 +32,7 @@ import { UpdateUserComponent } from './update-user/update-user.component';
 import { ForgotPassComponent } from './forgot-pass/forgot-pass.component';
 import { ResetPassComponent } from './reset-pass/reset-pass.component';
 import { ConfirmValidatorDirective } from "./ConfirmValidatorDirective";
+import { PaymentComponent } from "./payment/payment.component";
 
 var routes = [{
   path: '',
@@ -65,6 +67,11 @@ var routes = [{
   path: 'resetpass/:token',
   component: ResetPassComponent
 }
+,
+{
+  path: 'payment',
+  component: PaymentComponent
+}
 ];
 
 @NgModule({
@@ -80,7 +87,8 @@ var routes = [{
     UpdateUserComponent,
     ForgotPassComponent,
     ResetPassComponent,
-    ConfirmValidatorDirective
+    ConfirmValidatorDirective,
+    PaymentComponent
   ],
   imports: [
     BrowserModule,
@@ -89,6 +97,7 @@ var routes = [{
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
+    MatExpansionModule,
     FormsModule,
     ReactiveFormsModule,
     NgxPaginationModule,

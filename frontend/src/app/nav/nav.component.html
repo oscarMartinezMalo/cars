@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
-  <button mat-button routerLink="/">MyCompany</button>
-  <button mat-button routerLink="/cars">Cars</button>
+  <!-- <button mat-button routerLink="/">MyCompany</button> -->
+  <button mat-button routerLink="/cars">Vehicle Party</button>
   <span style="flex: 1 1 auto"></span>
   <button *ngIf="!auth.isAuthenticated" mat-button routerLink="/register">SignUp</button>
   <button *ngIf="!auth.isAuthenticated" mat-button routerLink="/login">Login</button>
@@ -11,6 +11,7 @@
   </button>
   <mat-menu #menu="matMenu">
     <button mat-menu-item routerLink="/update">Update Account</button>
+    <button mat-menu-item routerLink="/payment">Accepting contributions</button>
     <button mat-button (click)="auth.logout()">Logout</button>
   </mat-menu>
 </mat-toolbar>
