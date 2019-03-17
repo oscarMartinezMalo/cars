@@ -525,11 +525,6 @@ function updatePasswordById(userId, newPassword, resp) {
     })
 }
 
-
-
-
-
-
 // Paypal
 paypal.configure({
     'mode': 'sandbox', //sandbox or live
@@ -604,7 +599,7 @@ auth.get('/success', (req, res) => {
         } else {
             // console.log(JSON.stringify(payment));
             // res.send('Success');
-            res.redirect('http://localhost:4200')
+            res.redirect('http://vehicleparty.com');
         }
     });
 
@@ -613,7 +608,8 @@ auth.get('/success', (req, res) => {
 
 auth.get('/cancel', (req, res) =>{
     // res.send('Cancelled');
-    res.redirect('http://localhost:4200',400)
+    // res.redirect('http://localhost:4200',400)
+    res.redirect('http://vehicleparty.com', 400);
 });
 
 //paypal end

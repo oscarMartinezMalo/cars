@@ -4,8 +4,7 @@
     <input [(ngModel)]="searchTerm" matInput placeholder="By Brand">
   </mat-form-field>
 </p>
-<div
-  *ngFor="let car of webService.cars | async | carFilter : searchTerm | paginate: { itemsPerPage: 8, currentPage: pagination}">
+<div *ngFor="let car of webService.cars | async | carFilter : searchTerm | paginate: { itemsPerPage: 8, currentPage: pagination}">
   <mat-card>
 
     <mat-expansion-panel>
@@ -18,11 +17,13 @@
         </mat-panel-description>
       </mat-expansion-panel-header>
 
-      <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+      <img mat-card-image src="" alt="Photo">
       
     </mat-expansion-panel>
 
   </mat-card>
+
+  
 </div>
 
 <mat-card *ngIf="((webService.cars | async | carFilter : searchTerm)?.length) == 0 " class="mat-card-warning">Not cars

@@ -1,4 +1,4 @@
-a{
+/* a{
     background-color: gainsboro;
     border-radius: 3px;
     padding: 5px;
@@ -28,9 +28,9 @@ mat-card p{
     margin-top:10px;
 }
 
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+::placeholder {
     color: #3f51b5;
-    opacity: 1; /* Firefox */
+    opacity: 1;
 }
 
 mat-label {
@@ -45,4 +45,8 @@ mat-label {
     width: 200px;
     height: 200px;
     margin-top: 20px;
+  } */
+
+  .example-card {
+    max-width: 200px;
   }

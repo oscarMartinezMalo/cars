@@ -7,9 +7,9 @@ import { AuthService } from '../app/auth.service';
 @Injectable()
 export class WebService {
 
-    BASE_URL = 'http://localhost:3000/api';
+    // BASE_URL = 'http://localhost:3000/api';
     // BASE_URL = 'http://ec2-3-95-160-125.compute-1.amazonaws.com:3000/api';    
-    // BASE_URL = 'https://vehicleparty.com:3000/api';
+    BASE_URL = 'https://vehicleparty.com:3000/api';
 
     private carStore = [];
     private carsSubject = new Subject();
@@ -25,7 +25,7 @@ export class WebService {
             }, error =>{
                 //this.handleError(error);                
                 this.auth.logout(); // If not logged go and delete the localStorage User 
-                this.handleError("You have to be logged to see beyond the walls");
+                this.handleError("Please login first");
             });
     }
 
