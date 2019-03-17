@@ -476,8 +476,10 @@ auth.post('/pay', function (req, res) {
             "payment_method": "paypal"
         },
         "redirect_urls": {
-            "return_url": "http://localhost:3000/auth/success",
-            "cancel_url": "http://localhost:3000/auth/cancel"
+            // "return_url": "http://localhost:3000/auth/success",
+            // "cancel_url": "http://localhost:3000/auth/cancel"
+            "return_url": "http://vahicleparty/auth/success",
+            "cancel_url": "http://vahicleparty/auth/cancel"
         },
         "transactions": [{
             "item_list": {
