@@ -478,8 +478,8 @@ auth.post('/pay', function (req, res) {
         "redirect_urls": {
             // "return_url": "http://localhost:3000/auth/success",
             // "cancel_url": "http://localhost:3000/auth/cancel"
-            "return_url": "http://vahicleparty/auth/success",
-            "cancel_url": "http://vahicleparty/auth/cancel"
+            "return_url": "https://vehicleparty/auth/success",
+            "cancel_url": "https://vehicleparty/auth/cancel"
         },
         "transactions": [{
             "item_list": {
@@ -535,7 +535,7 @@ auth.get('/success', function (req, res) {
         } else {
             // console.log(JSON.stringify(payment));
             // res.send('Success');
-            res.redirect('http://vehicleparty.com');
+            res.redirect('https://vehicleparty.com');
         }
     });
 });
@@ -543,7 +543,7 @@ auth.get('/success', function (req, res) {
 auth.get('/cancel', function (req, res) {
     // res.send('Cancelled');
     // res.redirect('http://localhost:4200',400)
-    res.redirect('http://vehicleparty.com', 400);
+    res.redirect('https://vehicleparty.com', 400);
 });
 
 //paypal end
