@@ -478,8 +478,8 @@ auth.post('/pay', function (req, res) {
         "redirect_urls": {
             // "return_url": "http://localhost:3000/auth/success",
             // "cancel_url": "http://localhost:3000/auth/cancel"
-            "return_url": "https://vehicleparty/auth/success",
-            "cancel_url": "https://vehicleparty/auth/cancel"
+            "return_url": "https://vehicleparty.com/auth/success",
+            "cancel_url": "https://vehicleparty.com/auth/cancel"
         },
         "transactions": [{
             "item_list": {
