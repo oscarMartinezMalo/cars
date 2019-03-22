@@ -21,13 +21,11 @@
       
     </mat-expansion-panel>
 
-  </mat-card>
-
-  
+  </mat-card>  
 </div>
 
-<mat-card *ngIf="((webService.cars | async | carFilter : searchTerm)?.length) == 0 " class="mat-card-warning">Not cars
-  Founded</mat-card>
+<mat-card *ngIf="((webService.cars | async | carFilter : searchTerm)?.length) == 0 " class="mat-card-warning">No car was
+  found</mat-card>
 <mat-card>
   <pagination-controls (pageChange)="pagination = $event" maxSize="4" previousLabel="" nextLabel="" class="pagination">
   </pagination-controls>

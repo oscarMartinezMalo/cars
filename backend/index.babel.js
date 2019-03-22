@@ -34,18 +34,29 @@ var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 var uuidv1 = require('uuid/v1');
 var paypal = require('paypal-rest-sdk');
+
 // const nodemailer = require("nodemailer");
 
 var app = (0, _express2.default)();
+
 app.set('trust proxy', 1);
+var BASE_URL = 'https://vehicleparty.com/';
+// var BASE_URL = 'http://localhost:4200/';
+// var BASE_URL = 'http://vehicleparty.com/';
 // Cors is used to modified and receive Cookies, you have to do the request with { withCredentials: true }
 
 // app.use(cors({
-// origin: ['http://localhost:4200'], //the port my react app is running on.
+// origin: ['http://localhost:4200'], //the port my angular app is running on.
 //  origin: ['http://getcars.000webhostapp.com'],
-//    origin: ['http://ec2-3-95-160-125.compute-1.amazonaws.com'],
-// credentials: true
+//     origin: ['http://ec2-3-95-160-125.compute-1.amazonaws.com'],
+//             credentials: true
 // }));
+
+// app.use((req, resp, next) => {
+//     //resp.header("Access-Control-Allow-Origin", "http://localhost:4200");
+//     resp.header("Access-Control-Allow-Headers", "Origin, X-Requested-Width, Content-Type, Accept");
+//     next();
+// });
 
 // Allow all Cors
 app.use((0, _cors2.default)({
@@ -55,13 +66,6 @@ app.use((0, _cors2.default)({
 
 app.use(_bodyParser2.default.urlencoded({ extended: false }));
 app.use(_bodyParser2.default.json());
-
-// app.use((req, resp, next) => {
-//     //resp.header("Access-Control-Allow-Origin", "http://localhost:4200");
-//     resp.header("Access-Control-Allow-Headers", "Origin, X-Requested-Width, Content-Type, Accept");
-//     next();
-// });
-
 
 var api = _express2.default.Router();
 var auth = _express2.default.Router();
@@ -74,7 +78,7 @@ app.use(session({
         return genuuid(); // use UUIDs for session IDs
     },
     secret: '9TLONk4c642Fx7WtxGLSovicjBV9dhCITiUop8_xUu0og7hKGfx9Dx5vkNMNGDFQ',
-    store: sessionStore, // this set the session storage to the dataBase, by default the sessions are storage in memory not recomended in production
+    store: sessionStore, // This set the session storage to the dataBase, by default the sessions are storage in memory not recomended in production
     resave: false,
     // rolling: true; //Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown.
     saveUninitialized: false, //If is false is not gonna persist in the dataBase
@@ -109,7 +113,7 @@ var authMiddleware = function authMiddleware(req, res, next) {
     if (req.session && req.session.user) {
         next();
     } else {
-        res.status(403).json({ error: { message: "You have to be logged to see beyond the walls" } });
+        res.status(403).json({ error: { message: "Please login first" } });
     }
 };
 
@@ -144,7 +148,7 @@ auth.post('/login', [(0, _check.check)('email', "This is not a valid email").isE
 
     var user = req.body;
     var sql = 'SELECT * FROM `cars`.`users` WHERE email ="' + user.email + '"';
-    console.log(sql);
+    // console.log(sql);
     db.query(sql, function (err, results) {
         if (err) {
             next(err);
@@ -274,11 +278,11 @@ auth.post('/updateName', authMiddleware, [
     });
 });
 
-auth.post('/updatePassword', authMiddleware, PassCheckMiddleware, [
+auth.post('/updatePassword', authMiddleware, [
 // Validation the fields comming front the frontend
 (0, _check.check)('currentPassword', "Not a valid Current Password").isLength({ min: 3, max: 15 }).not().isEmpty().trim().escape(), (0, _check.check)('newPassword', "Not a valid New Password").isLength({ min: 6, max: 15 }).not().isEmpty().trim().escape(), (0, _check.check)('confirmPassword', "Not a valid New Password").isLength({ min: 6, max: 15 }).not().isEmpty().trim().escape()], function (req, resp, next) {
     var errors = (0, _check.validationResult)(req);
-
+    console.log("here");
     if (!errors.isEmpty()) {
         return resp.status(422).json({ error: { message: errors.array()[0].msg } });
     }
@@ -301,6 +305,7 @@ auth.post('/updatePassword', authMiddleware, PassCheckMiddleware, [
                 var hashSalt = sha512(user.currentPassword, dbUser.passwordSalt);
                 // Checking if the current password is the same as in the dataBase 
                 // if is the same  you can update the password with a new one
+
                 if (dbUser.passwordHash == hashSalt.hash) {
                     //Update the password
                     var CurrentSalt = genRandomString(16); /* Gives us salt of length 16 */
@@ -401,7 +406,8 @@ function sendTokenEmail(user, req) {
         to: user.email, // list of receivers
         subject: "Reset Cars Password ✔", // Subject line
         text: "This link is gonna expired in 15 minutes", // plain text body
-        html: '<b>Click on the link to reset the password</b>\n        <br>\n        <b>http://ec2-3-95-160-125.compute-1.amazonaws.com/index.html#/resetpass/' + req.session.id + '</b>'
+        html: '<b>Click on the link to reset the password</b>\n        <br>\n        <b>' + BASE_URL + 'index.html#/resetpass/' + req.session.id + '</b>'
+        // <b>http://ec2-3-95-160-125.compute-1.amazonaws.com/index.html#/resetpass/${req.session.id}</b>`
         // Used in local host
         // <b>http://localhost:4200/resetpass/${req.session.id}</b> // html body
     };
@@ -469,7 +475,23 @@ paypal.configure({
     'client_secret': 'EIk0gpDTqIe4E4wuMiOHOG9y0WOp5OAq1R2Ampe3GirlMrUGMueqZk2rlVBY7TD5A4qJG5JnY8pesOe4' //App Client ID
 });
 
-auth.post('/pay', function (req, res) {
+app.paymentAmount = "";
+
+auth.post('/pay', authMiddleware, [
+// Validation the fields comming front the frontend
+(0, _check.check)('amount', "Not a Valid amount").isNumeric().isInt().isLength({ min: 1, max: 3 }).not().isEmpty().trim().escape()], function (req, res, next) {
+
+    var errors = (0, _check.validationResult)(req);
+    if (!errors.isEmpty()) {
+        return resp.status(422).json({ error: { message: errors.array()[0].msg } });
+    }
+
+    var payment = req.body;
+    app.paymentAmount = req.body.amount;
+    // Fetch data from dataBase example
+    // amount = select amount from products where item = payment.item
+    //  quantity = payment.quantity
+    //  total = amount * quantity;
     var create_payment_json = {
         "intent": "sale",
         "payer": {
@@ -478,22 +500,22 @@ auth.post('/pay', function (req, res) {
         "redirect_urls": {
             // "return_url": "http://localhost:3000/auth/success",
             // "cancel_url": "http://localhost:3000/auth/cancel"
-            "return_url": "https://vehicleparty.com/auth/success",
-            "cancel_url": "https://vehicleparty.com/auth/cancel"
+            "return_url": BASE_URL + "/auth/success",
+            "cancel_url": BASE_URL + "/auth/cancel"
         },
         "transactions": [{
             "item_list": {
                 "items": [{
-                    "name": "Red Sox Hat",
-                    "sku": "item",
-                    "price": "25.00",
+                    "name": "Donation",
+                    "sku": "Donating dollars",
+                    "price": app.paymentAmount,
                     "currency": "USD",
                     "quantity": 1
                 }]
             },
             "amount": {
                 "currency": "USD",
-                "total": "25.00"
+                "total": app.paymentAmount
             },
             "description": "Paypal pay"
         }]
@@ -505,9 +527,12 @@ auth.post('/pay', function (req, res) {
         } else {
             for (var i = 0; i < payment.links.length; i++) {
                 if (payment.links[i].rel === 'approval_url') {
+                    // This open in a same page
                     // res.redirect(payment.links[i].href); 
-                    res.json({ paypalUrl: payment.links[i].href });
-                    // let url = payment.links[i].href ;             
+                    // This open in a new page
+                    // res.json({ paypalUrl: payment.links[i].href });
+                    // console.log(payment.links[i].href)
+                    res.redirect(payment.links[i].href);
                 }
             }
         }
@@ -515,7 +540,7 @@ auth.post('/pay', function (req, res) {
 });
 
 auth.get('/success', function (req, res) {
-    // let id = req.params.id;
+
     var payerId = req.query.PayerID;
     var paymentId = req.query.paymentId;
 
@@ -524,7 +549,7 @@ auth.get('/success', function (req, res) {
         "transactions": [{
             "amount": {
                 "currency": "USD",
-                "total": "25.00"
+                "total": app.paymentAmount
             }
         }]
     };
@@ -533,9 +558,13 @@ auth.get('/success', function (req, res) {
         if (error) {
             throw error;
         } else {
-            // console.log(JSON.stringify(payment));
+            //console.log(JSON.stringify(payment));
             // res.send('Success');
-            res.redirect('https://vehicleparty.com');
+            res.json(JSON.stringify(payment));
+            // res.redirect('back');
+            // res.redirect('..');
+            // res.redirect(BASE_URL);
+            // res.send()      
         }
     });
 });
@@ -543,7 +572,7 @@ auth.get('/success', function (req, res) {
 auth.get('/cancel', function (req, res) {
     // res.send('Cancelled');
     // res.redirect('http://localhost:4200',400)
-    res.redirect('https://vehicleparty.com', 400);
+    res.redirect(BASE_URL, 400);
 });
 
 //paypal end

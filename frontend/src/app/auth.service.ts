@@ -19,8 +19,8 @@ export class AuthService {
     private userCompleteNameSubj = new Subject();
     userCompName = this.userCompleteNameSubj.asObservable();
 
-    get completeName(){
-        return this.userCompleteName;        
+    get completeName() {
+        return this.userCompleteName;
     }
 
     constructor(private http: Http, private snackBar: MatSnackBar, private router: Router) { }
@@ -73,10 +73,10 @@ export class AuthService {
         this.router.navigate(['/']);
     }
 
-    getUserInfo(){
+    getUserInfo() {
         let response = this.http.get(this.BASE_URL + '/getUserInfo', {
             withCredentials: true
-        }).subscribe(res => {             
+        }).subscribe(res => {
             this.userCompleteName = res.json()[0];
             this.userCompleteNameSubj.next(this.userCompleteName);
         }, error => {
@@ -88,7 +88,7 @@ export class AuthService {
     updateUserInfo(userInfo) {
         let response = this.http.post(this.BASE_URL + '/updateName', userInfo, {
             withCredentials: true
-        }).subscribe(res => {            
+        }).subscribe(res => {
             this.handleMessages(res);
         }, error => {
             this.logout(); // If not logged go and delete the localStorage User 
@@ -104,11 +104,11 @@ export class AuthService {
         }, error => {
             //Ask if the session was wrong in that case execute logout otherwise dont logioout
             // this.logout(); // If not logged go and delete the localStorage User 
-            this.handleMessages(error);        
+            this.handleMessages(error);
         });
     }
 
-    sendResetEmail(emailReset){
+    sendResetEmail(emailReset) {
         let response = this.http.post(this.BASE_URL + '/resetpasswordEmail', emailReset, {
             withCredentials: true
         }).subscribe(res => {
@@ -119,7 +119,7 @@ export class AuthService {
         });
     }
 
-    forgotPasswordtoken(tokenPassword){
+    forgotPasswordtoken(tokenPassword) {
         let response = this.http.post(this.BASE_URL + '/forgotPassword', tokenPassword, {
             withCredentials: true
         }).subscribe(res => {
@@ -127,30 +127,27 @@ export class AuthService {
             this.router.navigate(['/login']);
         }, error => {
             this.handleMessages(error);
-            this.router.navigate(['/']);   
+            this.router.navigate(['/']);
         });
     }
 
-    paypalPay(){
-        let response = this.http.post(this.BASE_URL + '/pay', {
+    paypalPay(paymentProduct) {
+        let response = this.http.post(this.BASE_URL + '/pay', paymentProduct, {
             withCredentials: true
         }).subscribe(res => {
-
-            if( window.open(res.json().paypalUrl, "_blank")==null) {
-                alert("Desactive the popupblocker");
+            if (window.open(res.json().paypalUrl, "_blank") == null) {
+                alert("Please desactive the popup blocker");
             }
-
-       
         }, error => {
             this.handleMessages(error);
-            this.router.navigate(['/home']);   
+            this.router.navigate(['/home']);
         });
     }
 
     private handleMessages(error) {
         let messageResp = error.json();
         let message;
-        if(messageResp.succeed)
+        if (messageResp.succeed)
             message = messageResp.succeed;
         else
             message = messageResp.error.message;

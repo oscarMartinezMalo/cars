@@ -11,19 +11,19 @@
     cursor: pointer;
 }
 
-.mat-card {
+ .mat-card {
     background-color: whitesmoke;
     margin-top: 5px;
     padding: 10px;
     font-family: 'Times New Roman', Times, serif;
     font-weight: bold;    
-}
-
+} 
+*/
 .mat-card-warning{
     background-color: rgb(218, 99, 99);
     color: white;
 }
-
+/* 
 mat-card p{
     margin-top:10px;
 }
@@ -45,8 +45,8 @@ mat-label {
     width: 200px;
     height: 200px;
     margin-top: 20px;
-  } */
+  } 
 
   .example-card {
     max-width: 200px;
-  }
+  } */
