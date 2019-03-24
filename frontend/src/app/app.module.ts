@@ -5,11 +5,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { MatButtonModule, MatIconModule } from '@angular/material';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule, MatTableModule, MatPaginatorModule, MatSortModule } from '@angular/material';
-import {MatExpansionModule} from '@angular/material/expansion';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WebService } from './web.service';
 import { AuthService } from "./auth.service";
@@ -33,6 +34,8 @@ import { ForgotPassComponent } from './forgot-pass/forgot-pass.component';
 import { ResetPassComponent } from './reset-pass/reset-pass.component';
 import { ConfirmValidatorDirective } from "./ConfirmValidatorDirective";
 import { PaymentComponent } from "./payment/payment.component";
+import { PaymentStatusComponent } from './payment-status/payment-status.component';
+import { HomePageComponent } from './home-page/home-page.component';
 
 var routes = [{
   path: '',
@@ -72,6 +75,15 @@ var routes = [{
   path: 'payment',
   component: PaymentComponent
 }
+,
+{
+  path: 'payment/:status',
+  component: PaymentStatusComponent
+},
+{
+  path: 'home',
+  component: HomePageComponent
+}
 ];
 
 @NgModule({
@@ -88,7 +100,9 @@ var routes = [{
     ForgotPassComponent,
     ResetPassComponent,
     ConfirmValidatorDirective,
-    PaymentComponent
+    PaymentComponent,
+    PaymentStatusComponent,
+    HomePageComponent
   ],
   imports: [
     BrowserModule,

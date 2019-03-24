@@ -8,9 +8,9 @@ import { Subject } from 'rxjs';
 @Injectable()
 export class AuthService {
 
-    // BASE_URL = 'http://localhost:3000/auth';
+    BASE_URL = 'http://localhost:3000/auth';
     // BASE_URL = 'https://ec2-3-95-160-125.compute-1.amazonaws.com:3000/auth';
-    BASE_URL = 'https://vehicleparty.com:3000/auth';
+    // BASE_URL = 'https://vehicleparty.com:3000/auth';
 
     EMAIL_KEY = 'email';
     // TOKEN_KEY ='token';
@@ -104,6 +104,7 @@ export class AuthService {
         }, error => {
             //Ask if the session was wrong in that case execute logout otherwise dont logioout
             // this.logout(); // If not logged go and delete the localStorage User 
+            this.logout(); // If not logged go and delete the localStorage User 
             this.handleMessages(error);
         });
     }
@@ -115,6 +116,7 @@ export class AuthService {
             this.handleMessages(res);
             this.router.navigate(['/']);
         }, error => {
+            this.logout(); // If not logged go and delete the localStorage User 
             this.handleMessages(error);
         });
     }
@@ -126,8 +128,8 @@ export class AuthService {
             this.handleMessages(res);
             this.router.navigate(['/login']);
         }, error => {
+            this.logout(); // If not logged go and delete the localStorage User 
             this.handleMessages(error);
-            this.router.navigate(['/']);
         });
     }
 
@@ -139,8 +141,8 @@ export class AuthService {
                 alert("Please desactive the popup blocker");
             }
         }, error => {
+            this.logout(); // If not logged go and delete the localStorage User 
             this.handleMessages(error);
-            this.router.navigate(['/home']);
         });
     }
 

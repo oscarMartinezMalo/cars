@@ -1,0 +1,15 @@
+p{
+    text-align: center;
+    padding: 10px;
+}
+
+.warning{
+    background-color: rgb(218, 99, 99);
+    color: whitesmoke;
+}
+
+.success{
+    background-color: rgb(119, 228, 177);
+    color: whitesmoke;
+}
+

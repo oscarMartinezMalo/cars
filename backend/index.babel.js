@@ -40,7 +40,7 @@ var paypal = require('paypal-rest-sdk');
 var app = (0, _express2.default)();
 
 app.set('trust proxy', 1);
-var BASE_URL = 'https://vehicleparty.com/';
+var BASE_URL = 'https://vehicleparty.com';
 // var BASE_URL = 'http://localhost:4200/';
 // var BASE_URL = 'http://vehicleparty.com/';
 // Cors is used to modified and receive Cookies, you have to do the request with { withCredentials: true }
@@ -406,7 +406,7 @@ function sendTokenEmail(user, req) {
         to: user.email, // list of receivers
         subject: "Reset Cars Password ✔", // Subject line
         text: "This link is gonna expired in 15 minutes", // plain text body
-        html: '<b>Click on the link to reset the password</b>\n        <br>\n        <b>' + BASE_URL + 'index.html#/resetpass/' + req.session.id + '</b>'
+        html: '<b>Click on the link to reset the password</b>\n        <br>\n        <b>' + BASE_URL + '/index.html#/resetpass/' + req.session.id + '</b>'
         // <b>http://ec2-3-95-160-125.compute-1.amazonaws.com/index.html#/resetpass/${req.session.id}</b>`
         // Used in local host
         // <b>http://localhost:4200/resetpass/${req.session.id}</b> // html body
@@ -500,8 +500,10 @@ auth.post('/pay', authMiddleware, [
         "redirect_urls": {
             // "return_url": "http://localhost:3000/auth/success",
             // "cancel_url": "http://localhost:3000/auth/cancel"
-            "return_url": BASE_URL + "/auth/success",
-            "cancel_url": BASE_URL + "/auth/cancel"
+            // Change to this when Express runs in port 80 
+            // so apache sever have to change the default port(80) to allow express take the port 80 
+            "return_url": BASE_URL + ":3000/auth/success",
+            "cancel_url": BASE_URL + ":3000/auth/cancel"
         },
         "transactions": [{
             "item_list": {
@@ -530,9 +532,10 @@ auth.post('/pay', authMiddleware, [
                     // This open in a same page
                     // res.redirect(payment.links[i].href); 
                     // This open in a new page
-                    // res.json({ paypalUrl: payment.links[i].href });
-                    // console.log(payment.links[i].href)
-                    res.redirect(payment.links[i].href);
+                    res.json({ paypalUrl: payment.links[i].href });
+                    // console.log(payment.links[i].href)      
+                    // console.log( BASE_URL + ":3000/auth/success" );               
+                    // res.redirect(payment.links[i].href); 
                 }
             }
         }

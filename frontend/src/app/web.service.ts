@@ -33,4 +33,4 @@ export class WebService {
         this.snackBar.open(error, "close", {duration: 6000});
     }
 
-}
+} 
