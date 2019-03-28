@@ -1,52 +1,29 @@
-/* a{
-    background-color: gainsboro;
-    border-radius: 3px;
-    padding: 5px;
-}
-.mat-card-header{
-    display: block;
-    color: white;
-}
-.mat-card-header:hover{
-    cursor: pointer;
-}
-
- .mat-card {
-    background-color: whitesmoke;
-    margin-top: 5px;
-    padding: 10px;
-    font-family: 'Times New Roman', Times, serif;
-    font-weight: bold;    
-} 
-*/
-.mat-card-warning{
+/* .mat-card-warning{
     background-color: rgb(218, 99, 99);
     color: white;
-}
-/* 
-mat-card p{
-    margin-top:10px;
+} */
+
+section{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-auto-rows: auto;
+    grid-gap:10px;
+    margin: 0 20%;
+    max-width: 95%;
 }
 
-::placeholder {
-    color: #3f51b5;
-    opacity: 1;
-}
-
-mat-label {
-    color: #3f51b5;
-}
-
-.pagination /deep/ .ngx-pagination {
-    padding-inline-start: 0px;
+mat-card {
+    margin: auto;
+    max-width: 200px;
   }
 
-  .mat-card-image {
-    width: 200px;
-    height: 200px;
-    margin-top: 20px;
-  } 
+mat-form-field{
+    text-align: center;
+    margin-right: 1px;
+  }
 
-  .example-card {
-    max-width: 200px;
-  } */
+  @media only screen and (max-width: 600px) {
+    section {
+        margin: 0 auto;
+    }
+  }

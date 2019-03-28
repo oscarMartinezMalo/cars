@@ -102,9 +102,37 @@ api.get('/cars', function (req, resp) {
 
     //Select all the cars from the cars DB
     var sql = 'SELECT * FROM `cars`.`doral-hundai`';
+
     var query = db.query(sql, function (err, results) {
         if (err) throw err;
         resp.json(results);
+    });
+});
+
+api.get('/cars/:page/:perPage', function (req, res) {
+
+    var perPage = req.params.perPage;
+    var pageIndex = req.params.page;
+
+    var sql = 'SELECT count(*) as totalCars FROM `cars`.`doral-hundai`';
+
+    db.query(sql, function (err, resTotal) {
+        if (err) {
+            throw err;
+        } else {
+
+            var totalRecords = resTotal[0].totalCars;
+            var offsetNumber = pageIndex * perPage;
+            var sql1 = 'SELECT * FROM `cars`.`doral-hundai` limit ' + perPage + ' offset ' + offsetNumber;
+
+            db.query(sql1, function (err, records) {
+                if (err) {
+                    throw err;
+                } else {
+                    res.status(200).json({ 'total': totalRecords, 'pageIndex': pageIndex, records: records });
+                }
+            });
+        }
     });
 });
 
@@ -462,7 +490,6 @@ function updatePasswordById(userId, newPassword, resp) {
         if (error) {
             next(error);
         } else {
-
             resp.json({ succeed: "Password Successfully updated" });
         }
     });
@@ -498,12 +525,12 @@ auth.post('/pay', authMiddleware, [
             "payment_method": "paypal"
         },
         "redirect_urls": {
-            // "return_url": "http://localhost:3000/auth/success",
-            // "cancel_url": "http://localhost:3000/auth/cancel"
+            "return_url": "http://localhost:3000/auth/success",
+            "cancel_url": "http://localhost:3000/auth/cancel"
             // Change to this when Express runs in port 80 
             // so apache sever have to change the default port(80) to allow express take the port 80 
-            "return_url": BASE_URL + ":3000/auth/success",
-            "cancel_url": BASE_URL + ":3000/auth/cancel"
+            // "return_url": BASE_URL + ":3000/auth/success",
+            // "cancel_url": BASE_URL + ":3000/auth/cancel"    
         },
         "transactions": [{
             "item_list": {
@@ -531,7 +558,7 @@ auth.post('/pay', authMiddleware, [
                 if (payment.links[i].rel === 'approval_url') {
                     // This open in a same page
                     // res.redirect(payment.links[i].href); 
-                    // This open in a new page
+                    // This open in a new page        
                     res.json({ paypalUrl: payment.links[i].href });
                     // console.log(payment.links[i].href)      
                     // console.log( BASE_URL + ":3000/auth/success" );               
@@ -563,11 +590,16 @@ auth.get('/success', function (req, res) {
         } else {
             //console.log(JSON.stringify(payment));
             // res.send('Success');
-            res.json(JSON.stringify(payment));
+            // res.json(JSON.stringify(payment));
             // res.redirect('back');
             // res.redirect('..');
             // res.redirect(BASE_URL);
             // res.send()      
+
+            // 1.- create email with the data receipt the data in insede this variable (payment)
+            // 2.- redirect to success page.
+            // res.redirect(BASE_URL + "/#/payment/success" );
+            res.redirect(BASE_URL + "#/payment/success");
         }
     });
 });
@@ -575,11 +607,10 @@ auth.get('/success', function (req, res) {
 auth.get('/cancel', function (req, res) {
     // res.send('Cancelled');
     // res.redirect('http://localhost:4200',400)
-    res.redirect(BASE_URL, 400);
+    res.redirect(BASE_URL + "#/payment/error", 400);
 });
 
 //paypal end
-
 
 app.use('/api', api);
 app.use('/auth', auth);

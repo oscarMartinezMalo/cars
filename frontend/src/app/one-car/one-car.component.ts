@@ -16,7 +16,7 @@ export class OneCarComponent implements OnInit {
 
   ngOnInit() {
     var name = this.route.snapshot.params.id;
-    this.webService.getCars(name);
+    this.webService.getOneCar(name);
   }
 
 }

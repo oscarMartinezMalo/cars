@@ -18,15 +18,15 @@ const paypal = require('paypal-rest-sdk');
 const app = express();
 
 app.set('trust proxy', 1);
-// var BASE_URL = 'https://vehicleparty.com';
-var BASE_URL = 'http://localhost:4200/';
+var BASE_URL = 'https://vehicleparty.com';
+// var BASE_URL = 'http://localhost:4200/';
 // var BASE_URL = 'http://vehicleparty.com/';
 // Cors is used to modified and receive Cookies, you have to do the request with { withCredentials: true }
 
 // app.use(cors({
 // origin: ['http://localhost:4200'], //the port my angular app is running on.
-    //  origin: ['http://getcars.000webhostapp.com'],
-    //     origin: ['http://ec2-3-95-160-125.compute-1.amazonaws.com'],
+//  origin: ['http://getcars.000webhostapp.com'],
+//     origin: ['http://ec2-3-95-160-125.compute-1.amazonaws.com'],
 //             credentials: true
 // }));
 
@@ -78,10 +78,40 @@ api.get('/cars', (req, resp) => {
 
     //Select all the cars from the cars DB
     let sql = 'SELECT * FROM `cars`.`doral-hundai`';
+
     let query = db.query(sql, (err, results) => {
         if (err) throw err;
         resp.json(results);
     })
+})
+
+api.get('/cars/:page/:perPage', (req, res) => {
+
+    let perPage = req.params.perPage;
+    let pageIndex = req.params.page;
+
+    let sql = 'SELECT count(*) as totalCars FROM `cars`.`doral-hundai`';
+
+    db.query(sql, (err, resTotal) => {
+        if (err) {
+            throw err;
+        } else {
+
+            let totalRecords = resTotal[0].totalCars;
+            let offsetNumber = pageIndex * perPage
+            let sql1 = 'SELECT * FROM `cars`.`doral-hundai` limit ' + perPage + ' offset ' + offsetNumber;
+
+            db.query(sql1, (err, records) => {
+                if (err) {
+                    throw err;
+                } else {
+                    res.status(200).json({ 'total': totalRecords, 'pageIndex': pageIndex, records });
+                }
+            });
+
+        }
+    });
+
 })
 
 // Checks if user is logged in, by checking if user is stored in session.
@@ -604,7 +634,7 @@ auth.post('/pay', authMiddleware, [
                         // This open in a same page
                         // res.redirect(payment.links[i].href); 
                         // This open in a new page        
-                         res.json({ paypalUrl: payment.links[i].href });
+                        res.json({ paypalUrl: payment.links[i].href });
                         // console.log(payment.links[i].href)      
                         // console.log( BASE_URL + ":3000/auth/success" );               
                         // res.redirect(payment.links[i].href); 
@@ -645,7 +675,7 @@ auth.get('/success', (req, res) => {
             // 1.- create email with the data receipt the data in insede this variable (payment)
             // 2.- redirect to success page.
             // res.redirect(BASE_URL + "/#/payment/success" );
-            res.redirect(BASE_URL + "#/payment/success" );
+            res.redirect(BASE_URL + "#/payment/success");
         }
     });
 
@@ -656,16 +686,10 @@ auth.get('/cancel', (req, res) => {
     // res.send('Cancelled');
     // res.redirect('http://localhost:4200',400)
     res.redirect(BASE_URL + "#/payment/error", 400);
-   
+
 });
 
 //paypal end
-
-
-
-
-
-
 
 app.use('/api', api)
 app.use('/auth', auth)

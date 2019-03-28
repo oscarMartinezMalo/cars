@@ -8,9 +8,9 @@ import { Subject } from 'rxjs';
 @Injectable()
 export class AuthService {
 
-    BASE_URL = 'http://localhost:3000/auth';
+    // BASE_URL = 'http://localhost:3000/auth';
     // BASE_URL = 'https://ec2-3-95-160-125.compute-1.amazonaws.com:3000/auth';
-    // BASE_URL = 'https://vehicleparty.com:3000/auth';
+    BASE_URL = 'https://vehicleparty.com:3000/auth';
 
     EMAIL_KEY = 'email';
     // TOKEN_KEY ='token';

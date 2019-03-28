@@ -1,30 +1,61 @@
- <p>
+<!-- <p>
   <mat-form-field appearance="outline">
     <mat-label>Search Cars</mat-label>
     <input [(ngModel)]="searchTerm" matInput placeholder="By Brand">
   </mat-form-field>
-</p>
+</p> -->
 
-<div *ngFor="let car of carsToShow">
+  <section>
+    <mat-form-field>
+      <mat-label>Model</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let carpick of carsList" [value]="carpick.value">
+          {{carpick.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Brand</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let carpick of carsList" [value]="carpick.value">
+          {{carpick.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Trim</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let carpick of carsList" [value]="carpick.value">
+          {{carpick.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </section>
 
-  <mat-card>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title [routerLink]="['/cars', car['stock-number']]">
-          {{car['car-name']}}
-        </mat-panel-title>
-        <mat-panel-description>
-          {{car['internet-price']}}
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <img mat-card-image src="" alt="Photo">
-    </mat-expansion-panel>
-  </mat-card>
+  <section>
+    <!-- <mat-card *ngFor="let car of carsToShow" class="example-card" [routerLink]="['/cars', car['stock-number']]"> -->
+      <mat-card *ngFor="let car of webService.cars | async" class="example-card" [routerLink]="['/cars', car['stock-number']]">
+      <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-subtitle>{{car['car-name']}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          Miles 2000
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        {{car['internet-price']}}
+      </mat-card-actions>
+    </mat-card>
+  </section>
 
-</div>
 
-<mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+
+
+<mat-paginator [length]="webService.totalRecords" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"  [pageIndex] = "webService.pageIndex"
   (page)="onPageChanged($event)">
 </mat-paginator>
 
-<mat-card *ngIf="(carsToShow.length) == 0 " class="mat-card-warning">No car was found</mat-card>
+<mat-card *ngIf="(length) == 0 " class="mat-card-warning">No car was found</mat-card>

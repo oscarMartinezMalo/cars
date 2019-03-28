@@ -1,5 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+/* @import "@material/image-list/mdc-image-list"; */
+body, html{
+  height: 100%;
+}
 
 .example-container {
     display: flex;
@@ -15,3 +19,17 @@
 .example-full-width {
     width: 100%;
   }
+/* 
+  .my-image-list {
+    @include mdc-image-list-standard-columns(5);
+  }
+
+  .my-masonry-image-list {
+    @include mdc-image-list-masonry-columns(5);
+  }
+    
+  @media (max-width: 599px) {
+    .my-image-list {
+      @include mdc-image-list-standard-columns(3);
+    }
+  } */

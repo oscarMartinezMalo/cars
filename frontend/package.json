@@ -22,6 +22,7 @@
     "@angular/platform-browser": "^6.1.0",
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
+    "@material/image-list": "^1.0.0",
     "bootstrap": "^4.3.1",
     "braintree-web": "^3.42.0",
     "core-js": "^2.5.4",
