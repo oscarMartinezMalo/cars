@@ -12,11 +12,26 @@ section{
     max-width: 95%;
 }
 
+section.filter-box{
+  margin: 20px 0;
+}
+
+section.car-list{
+  margin-bottom: 70px;
+}
+
 mat-card {
     margin: auto;
     max-width: 200px;
   }
 
+.mat-paginator{
+  position: fixed;
+  top:100%;
+  left:0px;
+  transform: translate(0, -50px);
+  width: 100%;
+}
 mat-form-field{
     text-align: center;
     margin-right: 1px;

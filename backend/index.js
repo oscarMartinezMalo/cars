@@ -18,8 +18,8 @@ const paypal = require('paypal-rest-sdk');
 const app = express();
 
 app.set('trust proxy', 1);
-var BASE_URL = 'https://vehicleparty.com';
-// var BASE_URL = 'http://localhost:4200/';
+// var BASE_URL = 'https://vehicleparty.com';
+var BASE_URL = 'http://localhost:4200/';
 // var BASE_URL = 'http://vehicleparty.com/';
 // Cors is used to modified and receive Cookies, you have to do the request with { withCredentials: true }
 
@@ -70,25 +70,26 @@ db.connect(err => {
     if (err) throw err;
     console.log("Connected!");
 })
+// 
+// api.get('/cars', (req, resp) => {
 
-api.get('/cars', (req, resp) => {
+// Console log to check is user loggedIn
+// req.session.user ? console.log("Session number " + req.session.user) : console.log("New session");
 
-    // Console log to check is user loggedIn
-    // req.session.user ? console.log("Session number " + req.session.user) : console.log("New session");
+//Select all the cars from the cars DB
+//     let sql = 'SELECT * FROM `cars`.`doral-hundai`';
 
-    //Select all the cars from the cars DB
-    let sql = 'SELECT * FROM `cars`.`doral-hundai`';
+//     let query = db.query(sql, (err, results) => {
+//         if (err) throw err;
+//         resp.json(results);
+//     })
+// })
 
-    let query = db.query(sql, (err, results) => {
-        if (err) throw err;
-        resp.json(results);
-    })
-})
-
-api.get('/cars/:page/:perPage', (req, res) => {
+api.get('/cars/:page/:perPage/:sortByprice', (req, res) => {
 
     let perPage = req.params.perPage;
     let pageIndex = req.params.page;
+    let sortByprice = req.params.sortByprice;
 
     let sql = 'SELECT count(*) as totalCars FROM `cars`.`doral-hundai`';
 
@@ -98,8 +99,8 @@ api.get('/cars/:page/:perPage', (req, res) => {
         } else {
 
             let totalRecords = resTotal[0].totalCars;
-            let offsetNumber = pageIndex * perPage
-            let sql1 = 'SELECT * FROM `cars`.`doral-hundai` limit ' + perPage + ' offset ' + offsetNumber;
+            let offsetNumber = pageIndex * perPage;
+            let sql1 = 'SELECT * FROM `cars`.`doral-hundai` order by `internet-price`' + sortByprice + ' limit ' + perPage + ' offset ' + offsetNumber;
 
             db.query(sql1, (err, records) => {
                 if (err) {
@@ -138,10 +139,22 @@ api.get('/cars/:id', authMiddleware, (req, resp) => {
     // Console log to check if user loggedIn
     // req.session.user ? console.log("Old session") : console.log("New session");
     let id = req.params.id;
+
     let sql = 'SELECT * FROM  `cars`.`doral-hundai` WHERE  `stock-number` =' + "'" + id + "'";
     let query = db.query(sql, (err, result) => {
         if (err) throw err;
-        resp.json(result);
+
+        resp.status(200).json(
+            {
+                'stockNumber': result[0]['stock-number'],
+                'carName': result[0]['car-name'],
+                'priceDifference': result[0]['price-difference'],
+                'engine': result[0]['engine'],
+                'tranmission': result[0]['tranmission'],
+                'mpgRange': result[0]['mpg-range'],
+                'exteriorColor': result[0]['exterior-color'],
+                'pagination2Href': result[0]['pagination2-href']
+            });
     })
 })
 
@@ -345,7 +358,7 @@ auth.post('/updatePassword', authMiddleware, [
 ],
     (req, resp, next) => {
         const errors = validationResult(req);
-        console.log("here");
+        
         if (!errors.isEmpty()) {
             return resp.status(422).json({ error: { message: errors.array()[0].msg } });
         }

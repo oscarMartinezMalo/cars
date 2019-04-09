@@ -5,37 +5,20 @@
   </mat-form-field>
 </p> -->
 
-  <section>
+  <section class="filter-box">
     <mat-form-field>
-      <mat-label>Model</mat-label>
-      <mat-select>
-        <mat-option *ngFor="let carpick of carsList" [value]="carpick.value">
-          {{carpick.viewValue}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Brand</mat-label>
-      <mat-select>
-        <mat-option *ngFor="let carpick of carsList" [value]="carpick.value">
-          {{carpick.viewValue}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Trim</mat-label>
-      <mat-select>
-        <mat-option *ngFor="let carpick of carsList" [value]="carpick.value">
+      <mat-label>Sort by</mat-label>
+      <mat-select (selectionChange)="onFilterChanged($event)">
+        <mat-option *ngFor="let carpick of carsListPrice" [value]="carpick.value">
           {{carpick.viewValue}}
         </mat-option>
       </mat-select>
     </mat-form-field>
   </section>
 
-  <section>
-    <!-- <mat-card *ngFor="let car of carsToShow" class="example-card" [routerLink]="['/cars', car['stock-number']]"> -->
-      <mat-card *ngFor="let car of webService.cars | async" class="example-card" [routerLink]="['/cars', car['stock-number']]">
-      <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+    <section class="car-list"> 
+      <mat-card *ngFor="let car of cars" class="example-card" [routerLink]="['/cars', car['stock-number']]">
+      <img mat-card-image src="https://www.swissvaxaustralia.com/graphics/00000001/swissvax-car-cover.jpg" alt="Photo of a Shiba Inu">
       <mat-card-header>
         <div mat-card-avatar class="example-header-image"></div>
         <mat-card-subtitle>{{car['car-name']}}</mat-card-subtitle>
@@ -51,11 +34,9 @@
     </mat-card>
   </section>
 
-
-
-
-<mat-paginator [length]="webService.totalRecords" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"  [pageIndex] = "webService.pageIndex"
+<mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"  [pageIndex] = "pageIndex"
   (page)="onPageChanged($event)">
 </mat-paginator>
 
 <mat-card *ngIf="(length) == 0 " class="mat-card-warning">No car was found</mat-card>
+

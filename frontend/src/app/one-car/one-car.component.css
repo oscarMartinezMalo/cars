@@ -1,3 +1,8 @@
 .mat-card-header{
     display: block;
 }
+
+.mat-card-warning{
+    background-color: rgb(218, 99, 99);
+    color: white;
+}
