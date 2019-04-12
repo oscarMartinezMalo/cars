@@ -13,10 +13,11 @@ import { OneCarComponent } from "./one-car/one-car.component";
 import { CarsComponent } from "./cars/cars.component";
 import { AuthGuard } from "./auth-guard.service";
 import { CanDeactivateGuard } from "./update-user/can-deactivate-guard";
+import { ErrorPageComponent } from "./error-page/error-page.component";
 
 
 const appRoutes: Routes = [
-    { path: '', component: CarsComponent },
+    // { path: '', component: CarsComponent },
     { path: 'cars', component: CarsComponent },
     { path: 'cars/:id', component: OneCarComponent },
     { path: 'register', canActivate:[AuthGuard], component: RegisterComponent },
@@ -27,7 +28,8 @@ const appRoutes: Routes = [
     { path: 'payment', component: PaymentComponent },
     { path: 'payment/:status', component: PaymentStatusComponent },
     { path: 'home', component: MainNavComponent },
-    { path: '**', redirectTo: 'cars' }
+    { path: 'not_found', component: ErrorPageComponent, data: {message: 'Page not Found'} },
+    { path: '**', redirectTo: 'not_found' }
   ];
 
 @NgModule({

@@ -45,6 +45,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModude } from './app-routing.module';
 import { AuthGuard } from './auth-guard.service';
 import { CanDeactivateGuard } from './update-user/can-deactivate-guard';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { CanDeactivateGuard } from './update-user/can-deactivate-guard';
     ConfirmValidatorDirective,
     PaymentComponent,
     PaymentStatusComponent,
-    MainNavComponent
+    MainNavComponent,
+    ErrorPageComponent
   ],
   imports: [
     BrowserModule,
