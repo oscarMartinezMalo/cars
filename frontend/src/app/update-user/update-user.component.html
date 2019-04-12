@@ -9,7 +9,7 @@
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
-      <input [ngClass]="{'error': isValid('lastName')}" matInput placeholder="First Name" formControlName="lastName"
+      <input [ngClass]="{'error': isValid('lastName')}" matInput placeholder="Last Name" formControlName="lastName"
         maxlength="15">
       <mat-error *ngIf="formName.hasError('required', 'lastName')">Required</mat-error>
       <mat-error *ngIf="formName.hasError('minlength', 'lastName')">Minimum length 3 characters</mat-error>
@@ -17,7 +17,7 @@
 
     <button mat-raised-button color="primary">Update Name</button>
     <!-- </mat-card> -->
-  </form>
+  </form>  
 
   <form [formGroup]="formPassword" (ngSubmit)="updatePassword()" class="example-form">
 

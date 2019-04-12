@@ -11,15 +11,17 @@ import { LoginComponent } from "./login/login.component";
 import { RegisterComponent } from "./register/register.component";
 import { OneCarComponent } from "./one-car/one-car.component";
 import { CarsComponent } from "./cars/cars.component";
+import { AuthGuard } from "./auth-guard.service";
+import { CanDeactivateGuard } from "./update-user/can-deactivate-guard";
 
 
-const appRoutes :Routes = [
+const appRoutes: Routes = [
     { path: '', component: CarsComponent },
     { path: 'cars', component: CarsComponent },
     { path: 'cars/:id', component: OneCarComponent },
-    { path: 'register', component: RegisterComponent },
+    { path: 'register', canActivate:[AuthGuard], component: RegisterComponent },
     { path: 'login', component: LoginComponent },
-    { path: 'update', component: UpdateUserComponent },
+    { path: 'update', component: UpdateUserComponent, canDeactivate: [CanDeactivateGuard] },
     { path: 'forgotpass', component: ForgotPassComponent },
     { path: 'resetpass/:token', component: ResetPassComponent },
     { path: 'payment', component: PaymentComponent },

@@ -38,12 +38,13 @@ import { ResetPassComponent } from './reset-pass/reset-pass.component';
 import { ConfirmValidatorDirective } from "./ConfirmValidatorDirective";
 import { PaymentComponent } from "./payment/payment.component";
 import { PaymentStatusComponent } from './payment-status/payment-status.component';
-import { HomePageComponent } from './home-page/home-page.component';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { HttpClient } from 'selenium-webdriver/http';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModude } from './app-routing.module';
+import { AuthGuard } from './auth-guard.service';
+import { CanDeactivateGuard } from './update-user/can-deactivate-guard';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,6 @@ import { AppRoutingModude } from './app-routing.module';
     ConfirmValidatorDirective,
     PaymentComponent,
     PaymentStatusComponent,
-    HomePageComponent,
     MainNavComponent
   ],
   imports: [
@@ -92,7 +92,7 @@ import { AppRoutingModude } from './app-routing.module';
     MatListModule,
     AppRoutingModude
   ],
-  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }, WebService, AuthService, CookieService],
+  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }, WebService, AuthService, AuthGuard, CanDeactivateGuard, CookieService],
   // Used HTML5 PathLocationStrategy when you configured
   // web server to serve /index.html for any incoming request, no matter what the path is.
   // providers: [{provide: APP_BASE_HREF, useValue: '/my/app'},WebService, AuthService, CookieService],

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { MatSnackBar } from '@angular/material';
-import { Router } from "@angular/router";
-import { Subject } from 'rxjs';
+import { Router, ActivatedRoute } from "@angular/router";
+import { Subject, Observable } from 'rxjs';
 
 
 @Injectable()
@@ -18,12 +18,16 @@ export class AuthService {
     private userCompleteName = [];
     private userCompleteNameSubj = new Subject();
     userCompName = this.userCompleteNameSubj.asObservable();
+    loggedIn: boolean = false;
 
     get completeName() {
         return this.userCompleteName;
     }
 
-    constructor(private http: Http, private snackBar: MatSnackBar, private router: Router) { }
+    constructor(private http: Http,
+                private snackBar: MatSnackBar,
+                private router: Router,
+                private route: ActivatedRoute) { }
 
     get email() {
         return localStorage.getItem(this.EMAIL_KEY);
@@ -40,7 +44,8 @@ export class AuthService {
         this.http.post(this.BASE_URL + '/logout', {}, {
             withCredentials: true
         }).subscribe((res) => {
-            this.router.navigate(['/cars']);
+            // this.router.navigate(['/cars']);
+            this.loggedIn =false;            
         }, error => {
             this.handleMessages(error);
         });
@@ -52,25 +57,28 @@ export class AuthService {
             withCredentials: true
         }).subscribe(res => {
             this.authenticate(res);
+            this.loggedIn =true;
         }, error => {
             this.handleMessages(error);
         });
     }
 
-    login(loginData) {
+    login(loginData){
         let response = this.http.post(this.BASE_URL + '/login', loginData, {
             withCredentials: true
         }).subscribe(res => {
             this.authenticate(res);
+            this.loggedIn = true;
         }, error => {
             this.handleMessages(error);
         });
+        return response;
     }
 
     authenticate(res) {
         var authResponse = res.json();
         localStorage.setItem(this.EMAIL_KEY, authResponse.email);
-        this.router.navigate(['/']);
+        this.router.navigate(['/update']);
     }
 
     getUserInfo() {
@@ -94,6 +102,7 @@ export class AuthService {
             this.logout(); // If not logged go and delete the localStorage User 
             this.handleMessages(error);
         });
+
     }
 
     updatePassword(passWordInfo) {
@@ -107,6 +116,7 @@ export class AuthService {
             this.logout(); // If not logged go and delete the localStorage User 
             this.handleMessages(error);
         });
+        this.router.navigate(['../'], {relativeTo: this.route});
     }
 
     sendResetEmail(emailReset) {

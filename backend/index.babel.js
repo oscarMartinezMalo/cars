@@ -94,25 +94,26 @@ db.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
 });
+// 
+// api.get('/cars', (req, resp) => {
 
-api.get('/cars', function (req, resp) {
+// Console log to check is user loggedIn
+// req.session.user ? console.log("Session number " + req.session.user) : console.log("New session");
 
-    // Console log to check is user loggedIn
-    // req.session.user ? console.log("Session number " + req.session.user) : console.log("New session");
+//Select all the cars from the cars DB
+//     let sql = 'SELECT * FROM `cars`.`doral-hundai`';
 
-    //Select all the cars from the cars DB
-    var sql = 'SELECT * FROM `cars`.`doral-hundai`';
+//     let query = db.query(sql, (err, results) => {
+//         if (err) throw err;
+//         resp.json(results);
+//     })
+// })
 
-    var query = db.query(sql, function (err, results) {
-        if (err) throw err;
-        resp.json(results);
-    });
-});
-
-api.get('/cars/:page/:perPage', function (req, res) {
+api.get('/cars/:page/:perPage/:sortByprice', function (req, res) {
 
     var perPage = req.params.perPage;
     var pageIndex = req.params.page;
+    var sortByprice = req.params.sortByprice;
 
     var sql = 'SELECT count(*) as totalCars FROM `cars`.`doral-hundai`';
 
@@ -123,7 +124,7 @@ api.get('/cars/:page/:perPage', function (req, res) {
 
             var totalRecords = resTotal[0].totalCars;
             var offsetNumber = pageIndex * perPage;
-            var sql1 = 'SELECT * FROM `cars`.`doral-hundai` limit ' + perPage + ' offset ' + offsetNumber;
+            var sql1 = 'SELECT * FROM `cars`.`doral-hundai` order by `internet-price`' + sortByprice + ' limit ' + perPage + ' offset ' + offsetNumber;
 
             db.query(sql1, function (err, records) {
                 if (err) {
@@ -160,10 +161,21 @@ api.get('/cars/:id', authMiddleware, function (req, resp) {
     // Console log to check if user loggedIn
     // req.session.user ? console.log("Old session") : console.log("New session");
     var id = req.params.id;
+
     var sql = 'SELECT * FROM  `cars`.`doral-hundai` WHERE  `stock-number` =' + "'" + id + "'";
     var query = db.query(sql, function (err, result) {
         if (err) throw err;
-        resp.json(result);
+
+        resp.status(200).json({
+            'stockNumber': result[0]['stock-number'],
+            'carName': result[0]['car-name'],
+            'priceDifference': result[0]['price-difference'],
+            'engine': result[0]['engine'],
+            'tranmission': result[0]['tranmission'],
+            'mpgRange': result[0]['mpg-range'],
+            'exteriorColor': result[0]['exterior-color'],
+            'pagination2Href': result[0]['pagination2-href']
+        });
     });
 });
 
@@ -310,7 +322,7 @@ auth.post('/updatePassword', authMiddleware, [
 // Validation the fields comming front the frontend
 (0, _check.check)('currentPassword', "Not a valid Current Password").isLength({ min: 3, max: 15 }).not().isEmpty().trim().escape(), (0, _check.check)('newPassword', "Not a valid New Password").isLength({ min: 6, max: 15 }).not().isEmpty().trim().escape(), (0, _check.check)('confirmPassword', "Not a valid New Password").isLength({ min: 6, max: 15 }).not().isEmpty().trim().escape()], function (req, resp, next) {
     var errors = (0, _check.validationResult)(req);
-    console.log("here");
+
     if (!errors.isEmpty()) {
         return resp.status(422).json({ error: { message: errors.array()[0].msg } });
     }
