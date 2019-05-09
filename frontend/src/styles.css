@@ -19,6 +19,11 @@ body, html{
 .example-full-width {
     width: 100%;
   }
+
+  .active {
+    color: black;
+    background: #99a4e0;
+}
 /* 
   .my-image-list {
     @include mdc-image-list-standard-columns(5);

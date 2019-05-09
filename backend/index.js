@@ -100,12 +100,13 @@ api.get('/cars/:page/:perPage/:sortByprice', (req, res) => {
 
             let totalRecords = resTotal[0].totalCars;
             let offsetNumber = pageIndex * perPage;
-            let sql1 = 'SELECT * FROM `cars`.`doral-hundai` order by `internet-price`' + sortByprice + ' limit ' + perPage + ' offset ' + offsetNumber;
+            let sql1 = 'SELECT `stock-number` as stockNumber, `car-name` as carName, `price-difference` as priceDifference, `engine`, `tranmission`, `mpg-range` as mpgRange,`exterior-color` as exteriorColor FROM `cars`.`doral-hundai` order by `internet-price`' + sortByprice + ' limit ' + perPage + ' offset ' + offsetNumber;
 
             db.query(sql1, (err, records) => {
-                if (err) {
+                if (err) {                    
                     throw err;
                 } else {
+                    console.log(records[1]);
                     res.status(200).json({ 'total': totalRecords, 'pageIndex': pageIndex, records });
                 }
             });
@@ -120,7 +121,7 @@ const authMiddleware = (req, res, next) => {
     if (req.session && req.session.user) {
         next();
     } else {
-        res.status(403).json({ error: { message: "Please login first" } });
+        res.status(403).json({  message: "Please login first" });
     }
 };
 
@@ -134,11 +135,12 @@ const PassCheckMiddleware = (req, res, next) => {
 };
 
 // Pass the middleWare if you wanna ask if the user is logged before executing the request
-api.get('/cars/:id', authMiddleware, (req, resp) => {
+// api.get('/car/:id', authMiddleware, (req, resp) => {
 
+    api.get('/car', authMiddleware, (req, resp) => {
+    let id = req.query.id;
     // Console log to check if user loggedIn
     // req.session.user ? console.log("Old session") : console.log("New session");
-    let id = req.params.id;
 
     let sql = 'SELECT * FROM  `cars`.`doral-hundai` WHERE  `stock-number` =' + "'" + id + "'";
     let query = db.query(sql, (err, result) => {

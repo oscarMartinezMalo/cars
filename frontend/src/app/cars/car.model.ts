@@ -6,5 +6,4 @@ export class Car {
     tranmission: string;
     mpgRange: string;
     exteriorColor: string;
-    pagination2Href: string
 }

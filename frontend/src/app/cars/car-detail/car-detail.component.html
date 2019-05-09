@@ -1,0 +1,35 @@
+<mat-card class="example-card" [routerLink]="['/cars', car['stockNumber']]">
+  <img mat-card-image src="https://www.swissvaxaustralia.com/graphics/00000001/swissvax-car-cover.jpg"
+    alt="Photo of a Shiba Inu">
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image"></div>
+    <mat-card-subtitle>{{car['carName']}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      {{car['exteriorColor']}}
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    {{car['priceDifference']}}
+  </mat-card-actions>
+</mat-card>
+
+<!-- <mat-card class="example-card">
+  <img mat-card-image src="https://www.swissvaxaustralia.com/graphics/00000001/swissvax-car-cover.jpg"
+    alt="Photo of a Shiba Inu">
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image"></div>
+    <mat-card-subtitle>{{car['carName']}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      {{car['exteriorColor']}}
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    {{car['priceDifference']}}
+  </mat-card-actions>
+  <button mat-raised-button (click)="openBottomSheet()">See More</button>
+</mat-card> -->
+

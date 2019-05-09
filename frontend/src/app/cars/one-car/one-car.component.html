@@ -1,12 +1,12 @@
 <mat-card class="example-card" *ngIf="oneCar">
-    <mat-card-header [routerLink]="['/cars', oneCar.stockNumber]">
+    <mat-card-header >
         <mat-card-title>
             <h4>{{oneCar.carName}}</h4>            
         </mat-card-title>
         <mat-card-subtitle>{{oneCar.priceDifference}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        <div>{{oneCar.engine}}</div>
+        <div>{{oneCar['engine']}}</div>
         <p>{{oneCar.tranmission}}</p>
         <p>{{oneCar.mpgRange}}</p>
         <p>{{oneCar.exteriorColor}}</p>
@@ -16,4 +16,4 @@
         <a mat-raised-button color="primary" href="{{oneCar.pagination2Href}}" target='_blank'>Go to Source</a>
     </mat-card-actions>
 </mat-card>
-<mat-card *ngIf="!oneCar" class="mat-card-warning">Please login to see car info </mat-card>
+<!-- <mat-card *ngIf="!oneCar" class="mat-card-warning">Please login to see car info </mat-card> -->

@@ -32,10 +32,10 @@ export class AuthService {
     get email() {
         return localStorage.getItem(this.EMAIL_KEY);
     }
-
-    get isAuthenticated() {
-        // Check if the cookie exist if not exist detele the localStorage User and return false        
-        return (!!localStorage.getItem(this.EMAIL_KEY));
+    
+    get isAuthenticated() {             
+        // Check if the cookie exist if not exist, delete the localStorage User and return false  
+        return (!!localStorage.getItem(this.EMAIL_KEY)); // Double Bang !! used to convert the value return in to a boolean   
     }
 
     logout() {
@@ -43,21 +43,19 @@ export class AuthService {
         // localStorage.removeItem(this.TOKEN_KEY);
         this.http.post(this.BASE_URL + '/logout', {}, {
             withCredentials: true
-        }).subscribe((res) => {
-            // this.router.navigate(['/cars']);
-            this.loggedIn =false;            
+        }).subscribe((res) => { 
+            this.router.navigate(['/']);       
         }, error => {
             this.handleMessages(error);
         });
     }
 
     register(user) {
-        //delete user.confirmPassword;
+        // Delete user.confirmPassword;
         var response = this.http.post(this.BASE_URL + '/signup', user, {
             withCredentials: true
         }).subscribe(res => {
-            this.authenticate(res);
-            this.loggedIn =true;
+            this.setLocalKeyAutentication(res);
         }, error => {
             this.handleMessages(error);
         });
@@ -67,18 +65,17 @@ export class AuthService {
         let response = this.http.post(this.BASE_URL + '/login', loginData, {
             withCredentials: true
         }).subscribe(res => {
-            this.authenticate(res);
-            this.loggedIn = true;
+            this.setLocalKeyAutentication(res);
         }, error => {
             this.handleMessages(error);
         });
         return response;
     }
 
-    authenticate(res) {
+    setLocalKeyAutentication(res) {
         var authResponse = res.json();
         localStorage.setItem(this.EMAIL_KEY, authResponse.email);
-        this.router.navigate(['/update']);
+        this.router.navigate(['/cars']);
     }
 
     getUserInfo() {
@@ -159,11 +156,15 @@ export class AuthService {
     private handleMessages(error) {
         let messageResp = error.json();
         let message;
-        if (messageResp.succeed)
+
+        if (messageResp.succeed){
             message = messageResp.succeed;
-        else
+        }
+        else{
             message = messageResp.error.message;
-        this.snackBar.open(message, "close", { duration: 2000 });
+        }
+
+        this.snackBar.open(message, "Close", { duration: 3000 });
     }
 
 }

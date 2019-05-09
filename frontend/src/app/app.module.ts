@@ -4,13 +4,13 @@ import { NgxPaginationModule } from 'ngx-pagination';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { WebService } from './web.service';
+import { WebService } from './cars/web.service';
 import { AuthService } from "./auth.service";
 import { HttpModule } from '@angular/http';
 
 import { CookieService } from 'ngx-cookie-service';
 
-import { MatButtonModule, MatIconModule, MatCheckbox } from '@angular/material';
+import { MatButtonModule, MatIconModule, MatCheckbox, MatBottomSheetModule } from '@angular/material';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule, MatTableModule, MatPaginatorModule, MatSortModule, MatListModule } from '@angular/material';
@@ -29,7 +29,7 @@ import { CarFilterPipe } from './car-filter.pipe';
 import { CarsComponent } from './cars/cars.component';
 import { NavComponent } from './nav/nav.component';
 import { HomeComponent } from './home.component';
-import { OneCarComponent } from './one-car/one-car.component';
+import { OneCarComponent } from './cars/one-car/one-car.component'
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { UpdateUserComponent } from './update-user/update-user.component';
@@ -46,6 +46,8 @@ import { AppRoutingModude } from './app-routing.module';
 import { AuthGuard } from './auth-guard.service';
 import { CanDeactivateGuard } from './update-user/can-deactivate-guard';
 import { ErrorPageComponent } from './error-page/error-page.component';
+import { CarDetailComponent } from './cars/car-detail/car-detail.component';
+// import {  BottomSheetOverviewExampleSheet } from './cars/car-detail/car-detail.component';
 
 @NgModule({
   declarations: [
@@ -64,11 +66,14 @@ import { ErrorPageComponent } from './error-page/error-page.component';
     PaymentComponent,
     PaymentStatusComponent,
     MainNavComponent,
-    ErrorPageComponent
+    ErrorPageComponent,
+    CarDetailComponent,
+    // BottomSheetOverviewExampleSheet
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    MatBottomSheetModule,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
@@ -94,7 +99,10 @@ import { ErrorPageComponent } from './error-page/error-page.component';
     MatListModule,
     AppRoutingModude
   ],
-  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }, WebService, AuthService, AuthGuard, CanDeactivateGuard, CookieService],
+  // entryComponents: [ BottomSheetOverviewExampleSheet],
+  providers: [ WebService, AuthService, AuthGuard, CanDeactivateGuard, CookieService],
+
+  // providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }, WebService, AuthService, AuthGuard, CanDeactivateGuard, CookieService],
   // Used HTML5 PathLocationStrategy when you configured
   // web server to serve /index.html for any incoming request, no matter what the path is.
   // providers: [{provide: APP_BASE_HREF, useValue: '/my/app'},WebService, AuthService, CookieService],

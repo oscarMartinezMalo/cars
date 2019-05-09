@@ -9,6 +9,7 @@
       <mat-error *ngIf="paypalForm.hasError('min', 'amount')">Minimum donation 1 dollar</mat-error>
     </mat-form-field>
 
-    <button type="button" class="btn btn-primary">Submit Donation</button>
+    <button mat-raised-button color="primary"  [disabled]= "!paypalForm.valid">Submit Donation</button>
+
   </form>
 </mat-card>

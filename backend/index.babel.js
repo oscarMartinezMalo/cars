@@ -40,8 +40,8 @@ var paypal = require('paypal-rest-sdk');
 var app = (0, _express2.default)();
 
 app.set('trust proxy', 1);
-var BASE_URL = 'https://vehicleparty.com';
-// var BASE_URL = 'http://localhost:4200/';
+// var BASE_URL = 'https://vehicleparty.com';
+var BASE_URL = 'http://localhost:4200/';
 // var BASE_URL = 'http://vehicleparty.com/';
 // Cors is used to modified and receive Cookies, you have to do the request with { withCredentials: true }
 
@@ -157,7 +157,7 @@ var PassCheckMiddleware = function PassCheckMiddleware(req, res, next) {
 
 // Pass the middleWare if you wanna ask if the user is logged before executing the request
 api.get('/cars/:id', authMiddleware, function (req, resp) {
-
+    
     // Console log to check if user loggedIn
     // req.session.user ? console.log("Old session") : console.log("New session");
     var id = req.params.id;

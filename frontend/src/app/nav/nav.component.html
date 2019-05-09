@@ -1,17 +1,18 @@
 <mat-toolbar color="primary">
-  <!-- <button mat-button routerLink="/">MyCompany</button> -->
+
   <button mat-button routerLink="cars">Vehicle Party</button>
   <span style="flex: 1 1 auto"></span>
-  <button *ngIf="!auth.isAuthenticated" mat-button routerLink="/register">SignUp</button>
-  <button *ngIf="!auth.isAuthenticated" mat-button routerLink="/login">Login</button>
+  <button *ngIf="!auth.isAuthenticated" mat-button routerLinkActive="active" routerLink="/register">SignUp</button>
+  <button *ngIf="!auth.isAuthenticated" mat-button routerLinkActive="active" routerLink="/login">Login</button>
   <button *ngIf="auth.isAuthenticated" mat-button routerLink="/">{{auth.email}}</button>
-  <!-- <button *ngIf="auth.isAuthenticated" routerLink="/cars" (click) = "auth.logout()">Logout</button> -->
+
   <button *ngIf="auth.isAuthenticated" mat-button [matMenuTriggerFor]="menu">
     <mat-icon>account_circle</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
-    <button mat-menu-item routerLink="/update">Update Account</button>
-    <button mat-menu-item routerLink="/payment">Contributions</button>
+    <button mat-menu-item routerLinkActive="active" routerLink="/update">Update Account</button>
+    <button mat-menu-item routerLinkActive="active" routerLink="/payment">Contributions</button>
     <button mat-button (click)="auth.logout()">Logout</button>
   </mat-menu>
 </mat-toolbar>
+
