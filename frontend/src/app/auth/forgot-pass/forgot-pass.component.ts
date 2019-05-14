@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { embeddedViewEnd } from '@angular/core/src/render3/instructions';
 import { FormBuilder, Validators } from "@angular/forms";
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-forgot-pass',

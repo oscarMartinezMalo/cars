@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { throwError } from 'rxjs';
-import { AuthService } from '../auth.service';
+
+import { AuthService } from '../auth/auth.service';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Car } from './car.model';
+
+import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 export interface Cars {
@@ -15,9 +17,9 @@ export interface Cars {
 @Injectable()
 export class WebService {
 
-    BASE_URL = 'http://localhost:3000/api';
+    // BASE_URL = 'http://localhost:3000/api';
     // BASE_URL = 'http://ec2-3-95-160-125.compute-1.amazonaws.com:3000/api';    
-    // BASE_URL = 'https://vehicleparty.com:3000/api';
+    BASE_URL = 'https://vehicleparty.com:3000/api';
 
     // private carStore = [];
     // private carsSubject = new Subject();

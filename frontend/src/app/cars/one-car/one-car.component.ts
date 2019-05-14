@@ -3,7 +3,6 @@ import { WebService } from '../web.service';
 import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Car } from '../car.model';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-one-car',
@@ -17,10 +16,8 @@ export class OneCarComponent implements OnInit {
 
   constructor(private webService: WebService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
 
-
-
   ngOnInit() {
-console.log("asd");
+
     this.id = this.route.snapshot.params.id;
 
     if (this.id) {

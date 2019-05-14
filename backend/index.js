@@ -597,7 +597,7 @@ auth.post('/pay', authMiddleware, [
         .escape()
 ],
     (req, res, next) => {
-
+        console.log("asd");
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return resp.status(422).json({ error: { message: errors.array()[0].msg } });

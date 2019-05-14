@@ -1,5 +1,6 @@
 import { Directive, Input } from '@angular/core';
 import { Validator, NG_VALIDATORS, AbstractControl } from '@angular/forms';
+
 @Directive({
   selector: '[appConfirmValidator]',
   providers: [{
@@ -11,13 +12,12 @@ import { Validator, NG_VALIDATORS, AbstractControl } from '@angular/forms';
 export class ConfirmValidatorDirective implements Validator {
   @Input()
   appConfirmValidator: string;
-  validate(control: AbstractControl): {
-    [key: string]: any;
-  } | null {
+  validate(control: AbstractControl): { [key: string]: any } | null {
     const controlToCompare = control.parent.get(this.appConfirmValidator);
     if (controlToCompare && controlToCompare.value !== control.value) {
       return { 'notEqual': true };
     }
     return null;
   }
+
 }

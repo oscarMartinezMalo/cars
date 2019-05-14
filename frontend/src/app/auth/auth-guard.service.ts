@@ -1,7 +1,7 @@
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
-import { Inject, Injectable } from '@angular/core';
+import {  Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class AuthGuard implements CanActivate {
         }
         else{
             this.snackBar.open("Login First please","Close", { duration: 3000 });
-            this.router.navigate(['/']);            
+            this.router.navigate(['/cars']);            
         }
 
     }

@@ -1,19 +1,20 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
-import { MainNavComponent } from "./main-nav/main-nav.component";
-import { PaymentStatusComponent } from "./payment-status/payment-status.component";
-import { PaymentComponent } from "./payment/payment.component";
-import { ResetPassComponent } from "./reset-pass/reset-pass.component";
-import { ForgotPassComponent } from "./forgot-pass/forgot-pass.component";
-import { UpdateUserComponent } from "./update-user/update-user.component";
-import { LoginComponent } from "./login/login.component";
-import { RegisterComponent } from "./register/register.component";
-import { OneCarComponent } from "./cars/one-car/one-car.component";
-import { CarsComponent } from "./cars/cars.component";
-import { AuthGuard } from "./auth-guard.service";
-import { CanDeactivateGuard } from "./update-user/can-deactivate-guard";
+// import { MainNavComponent } from "./main-nav/main-nav.component";
+import { PaymentStatusComponent } from "./paypal-payment/payment-status/payment-status.component";
+import { PaymentComponent } from "./paypal-payment/payment/payment.component";
+// import { ResetPassComponent } from "./auth/reset-pass/reset-pass.component";
+// import { ForgotPassComponent } from "./auth/forgot-pass/forgot-pass.component";
+// import { UpdateUserComponent } from "./auth/update-user/update-user.component";
+// import { LoginComponent } from "./auth/login/login.component";
+// import { RegisterComponent } from "./auth/register/register.component";
+// import { OneCarComponent } from "./cars/one-car/one-car.component";
+// import { CarsComponent } from "./cars/cars.component";
+import { AuthGuard } from "./auth/auth-guard.service";
+// import { CanDeactivateGuard } from "./auth/update-user/can-deactivate-guard";
 import { ErrorPageComponent } from "./error-page/error-page.component";
+import { HomeComponent } from "./core/home/home.component";
 
 
 const appRoutes: Routes = [
@@ -23,17 +24,17 @@ const appRoutes: Routes = [
   //     { path: ':id', component: OneCarComponent }
   //   ]
   // },
-  { path: '', redirectTo: '/cars', pathMatch: 'full' },
-  { path: 'cars', component: CarsComponent },  // This is gonna load the data on a new Page
-  { path: 'cars/:id', canActivate: [AuthGuard], component: OneCarComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'update', canActivate: [AuthGuard], component: UpdateUserComponent, canDeactivate: [CanDeactivateGuard] }, // Ask the user if he wanna leave the page before make changes
-  { path: 'forgotpass', component: ForgotPassComponent },
-  { path: 'resetpass/:token', component: ResetPassComponent },
+  // { path: '', redirectTo: '/cars', pathMatch: 'full' },
+  // { path: 'cars', component: CarsComponent },  // This is gonna load the data on a new Page
+  // { path: 'cars/:id', canActivate: [AuthGuard], component: OneCarComponent },
+  // { path: 'register', component: RegisterComponent },
+  // { path: 'login', component: LoginComponent },
+  // { path: 'update', canActivate: [AuthGuard], component: UpdateUserComponent, canDeactivate: [CanDeactivateGuard] }, // Ask the user if he wanna leave the page before make changes
+  // { path: 'forgotpass', component: ForgotPassComponent },
+  // { path: 'resetpass/:token', component: ResetPassComponent },
+  { path: '', component: HomeComponent},
   { path: 'payment', canActivate: [AuthGuard], component: PaymentComponent },
   { path: 'payment/:status', canActivate: [AuthGuard], component: PaymentStatusComponent },
-  { path: 'home', component: MainNavComponent },
   { path: 'not_found', component: ErrorPageComponent, data: { message: 'Page not Found' } },
   { path: '**', redirectTo: '/not_found' }
 ];

@@ -40,8 +40,8 @@ var paypal = require('paypal-rest-sdk');
 var app = (0, _express2.default)();
 
 app.set('trust proxy', 1);
-// var BASE_URL = 'https://vehicleparty.com';
-var BASE_URL = 'http://localhost:4200/';
+var BASE_URL = 'https://vehicleparty.com';
+// var BASE_URL = 'http://localhost:4200/';
 // var BASE_URL = 'http://vehicleparty.com/';
 // Cors is used to modified and receive Cookies, you have to do the request with { withCredentials: true }
 
@@ -124,12 +124,13 @@ api.get('/cars/:page/:perPage/:sortByprice', function (req, res) {
 
             var totalRecords = resTotal[0].totalCars;
             var offsetNumber = pageIndex * perPage;
-            var sql1 = 'SELECT * FROM `cars`.`doral-hundai` order by `internet-price`' + sortByprice + ' limit ' + perPage + ' offset ' + offsetNumber;
+            var sql1 = 'SELECT `stock-number` as stockNumber, `car-name` as carName, `price-difference` as priceDifference, `engine`, `tranmission`, `mpg-range` as mpgRange,`exterior-color` as exteriorColor FROM `cars`.`doral-hundai` order by `internet-price`' + sortByprice + ' limit ' + perPage + ' offset ' + offsetNumber;
 
             db.query(sql1, function (err, records) {
                 if (err) {
                     throw err;
                 } else {
+                    console.log(records[1]);
                     res.status(200).json({ 'total': totalRecords, 'pageIndex': pageIndex, records: records });
                 }
             });
@@ -142,7 +143,7 @@ var authMiddleware = function authMiddleware(req, res, next) {
     if (req.session && req.session.user) {
         next();
     } else {
-        res.status(403).json({ error: { message: "Please login first" } });
+        res.status(403).json({ message: "Please login first" });
     }
 };
 
@@ -156,11 +157,12 @@ var PassCheckMiddleware = function PassCheckMiddleware(req, res, next) {
 };
 
 // Pass the middleWare if you wanna ask if the user is logged before executing the request
-api.get('/cars/:id', authMiddleware, function (req, resp) {
-    
+// api.get('/car/:id', authMiddleware, (req, resp) => {
+
+api.get('/car', authMiddleware, function (req, resp) {
+    var id = req.query.id;
     // Console log to check if user loggedIn
     // req.session.user ? console.log("Old session") : console.log("New session");
-    var id = req.params.id;
 
     var sql = 'SELECT * FROM  `cars`.`doral-hundai` WHERE  `stock-number` =' + "'" + id + "'";
     var query = db.query(sql, function (err, result) {
