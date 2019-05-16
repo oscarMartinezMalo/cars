@@ -4,26 +4,28 @@
     <input [(ngModel)]="searchTerm" matInput placeholder="By Brand">
   </mat-form-field>
 </p> -->
+<div class="car-container">
 
-<section class="filter-box">
-  <mat-form-field>
-    <mat-label>Sort by</mat-label>
-    <mat-select (selectionChange)="onFilterChanged($event)">
-      <mat-option *ngFor="let carpick of carsListPrice" [value]="carpick.value">
-        {{carpick.viewValue}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-</section>
+  <section class="filter-box">
+    <mat-form-field>
+      <mat-label>Sort by</mat-label>
+      <mat-select (selectionChange)="onFilterChanged($event)">
+        <mat-option *ngFor="let carpick of carsListPrice" [value]="carpick.value">
+          {{carpick.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </section>
 
-<!-- <router-outlet></router-outlet> -->
+  <!-- <router-outlet></router-outlet> -->
 
-<section class="car-list">
-  <app-car-detail *ngFor="let carEl of cars" [car]='carEl'></app-car-detail>
-</section>
+  <section class="car-list">
+    <app-car-detail *ngFor="let carEl of cars" [car]='carEl'></app-car-detail>
+  </section>
 
-<mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" [pageIndex]="pageIndex"
-  (page)="onPageChanged($event)">
-</mat-paginator>
+  <mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+    [pageIndex]="pageIndex" (page)="onPageChanged($event)">
+  </mat-paginator>
 
-<mat-card *ngIf="(length) == 0 " class="mat-card-warning">No car was found</mat-card>
+  <mat-card *ngIf="(totalRecords) == 0 " class="mat-card-warning">No car was found</mat-card>
+</div>

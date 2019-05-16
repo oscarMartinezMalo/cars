@@ -19,7 +19,7 @@ export class WebService {
 
     // BASE_URL = 'http://localhost:3000/api';
     // BASE_URL = 'http://ec2-3-95-160-125.compute-1.amazonaws.com:3000/api';    
-    BASE_URL = 'https://vehicleparty.com:3000/api';
+     BASE_URL = 'https://vehicleparty.com:3000/api';
 
     // private carStore = [];
     // private carsSubject = new Subject();

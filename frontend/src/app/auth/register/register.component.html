@@ -1,5 +1,5 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="example-form">
-  <mat-card class="example-card card-register">
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="example-form card-register">
+  <mat-card class="example-card ">
     <mat-form-field class="example-full-width">
       <input [ngClass]="{'error': isValid('firstName')}" matInput placeholder="First Name" formControlName="firstName" maxlength="15">
       <!-- <mat-error *ngIf="form.get('firstName').errors?.required">Required</mat-error> -->

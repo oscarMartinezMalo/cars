@@ -2,18 +2,20 @@
     background-color: rgb(218, 99, 99);
     color: white;
 } */
+.car-container {
+ position: relative;
+ top: 80px;
+}
 
 section{
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-auto-rows: auto;
     grid-gap:10px;
-    margin: 0 20%;
     max-width: 95%;
 }
 
 section.filter-box{
-  margin: 20px 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,7 +43,7 @@ mat-form-field{
   }
 
   @media only screen and (max-width: 600px) {
-    section {
+    /* section {
         margin: 0 auto;
-    }
+    } */
   }
