@@ -1,7 +1,10 @@
-<mat-card class="example-card" *ngIf="oneCar">
-    <mat-card-header >
+<!-- Card angular material -->
+<!-- <mat-card class="example-card" *ngIf="oneCar">
+    <img src="https://images.unsplash.com/photo-1547010427-45f4b5a8092f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+        class="img-fluid" alt="Responsive image">
+    <mat-card-header>
         <mat-card-title>
-            <h4>{{oneCar.carName}}</h4>            
+            <h4>{{oneCar.carName}}</h4>
         </mat-card-title>
         <mat-card-subtitle>{{oneCar.priceDifference}}</mat-card-subtitle>
     </mat-card-header>
@@ -15,5 +18,29 @@
     <mat-card-actions>
         <a mat-raised-button color="primary" href="{{oneCar.pagination2Href}}" target='_blank'>Go to Source</a>
     </mat-card-actions>
-</mat-card>
+</mat-card> -->
 <!-- <mat-card *ngIf="!oneCar" class="mat-card-warning">Please login to see car info </mat-card> -->
+
+<!-- Card boostrap -->
+<div class="card">
+
+    <img class="card-img"
+        src="https://images.unsplash.com/photo-1547010427-45f4b5a8092f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+        alt="Card image">
+    <!-- <div class="card-img-overlay">
+        <button type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div> -->
+
+    <div class="card-body">
+        <h5 class="card-title">{{oneCar.carName}}</h5>
+        <p class="card-text">{{oneCar['engine']}} </p>
+        <p class="card-text">{{oneCar.tranmission}} </p>
+        <p class="card-text">{{oneCar.mpgRange}} </p>
+        <p class="card-text">{{oneCar.exteriorColor}} </p>
+    </div>
+    <div class="card-footer">
+        <small class="text-muted">{{oneCar.priceDifference}}</small>
+    </div>
+</div>

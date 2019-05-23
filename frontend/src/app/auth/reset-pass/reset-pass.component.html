@@ -1,4 +1,6 @@
-<form [formGroup]="formPassword" (ngSubmit)="updatePassword()" class="example-form">
+<form [formGroup]="formPassword" (ngSubmit)="updatePassword()" class="example-form card-style">
+  <mat-card-subtitle class="card-description">Reset Email</mat-card-subtitle>
+  <hr>
   <mat-card class="example-card card-login">
     <mat-form-field class="example-full-width">
       <input [ngClass]="{'error': isValid('newPassword')}" type="password" matInput placeholder="New Password"

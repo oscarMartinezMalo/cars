@@ -1,6 +1,7 @@
-<div class="login-container">
-
-  <mat-card class="example-card card-login">
+<div class="card-style">
+  <p class="card-description">LogIn</p>
+  <hr>
+  <mat-card>
     <mat-form-field class="example-full-width">
       <input [(ngModel)]="loginData.email" matInput placeholder="Email" type="email" maxlength="50">
     </mat-form-field>
@@ -12,5 +13,5 @@
     <br>
     <button mat-raised-button color="primary" (click)="login()">Register</button>
   </mat-card>
-  
+
 </div>

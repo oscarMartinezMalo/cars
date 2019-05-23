@@ -1,9 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import {MatSidenav} from '@angular/material/sidenav';
 import { WebService } from './web.service';
+import { AuthService } from '../auth/auth.service';
 //import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Car } from './car.model';
 import { MatSnackBar } from '@angular/material';
+
+
 //import { Car } from '../car';
 //import { Http } from '@angular/http';
 // import { Subject } from 'rxjs';
@@ -19,6 +23,7 @@ export interface CarSortBy {
   styleUrls: ['./cars.component.css']
 })
 export class CarsComponent implements OnInit {
+  @ViewChild('sidenav') sidenav: MatSidenav;
 
   carsListPrice: CarSortBy[] = [
     { value: 'asc', viewValue: 'Price: Low to Hight' },
@@ -33,8 +38,9 @@ export class CarsComponent implements OnInit {
   sortByprice = "asc"
   cars: Car[];
 
-  constructor(private webService: WebService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
+  constructor(private webService: WebService,private auth: AuthService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
 
+  
   setPageSizeOptions(setPageSizeOptionsInput: string) {
     this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
   }
@@ -51,6 +57,8 @@ export class CarsComponent implements OnInit {
 
     // Detect when the router change and update the element without update the whole page
     this.route.params.subscribe((params: Params) => {
+      // Close the sideNav when a change is detected
+      this.sidenav.close();
       if (params['pageSize'] || params['pageIndex'] || params['sortByprice']) {
         this.webService.getCarsPagination(params['pageIndex'], params['pageSize'], params['sortByprice']).subscribe(data => {
           this.totalRecords = data.total;
@@ -62,6 +70,13 @@ export class CarsComponent implements OnInit {
       }
     })
 
+  }
+
+  // NavBar 
+  sideNavOpen(){
+    if(this.auth.isAuthenticated){
+      this.sidenav.open()
+    }
   }
 
 

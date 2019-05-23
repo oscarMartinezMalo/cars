@@ -33,6 +33,7 @@ const appRoutes: Routes = [
   // { path: 'forgotpass', component: ForgotPassComponent },
   // { path: 'resetpass/:token', component: ResetPassComponent },
   { path: '', component: HomeComponent},
+  { path: 'cars', loadChildren: './cars/cars.module#CarsModule'},
   { path: 'payment', canActivate: [AuthGuard], component: PaymentComponent },
   { path: 'payment/:status', canActivate: [AuthGuard], component: PaymentStatusComponent },
   { path: 'not_found', component: ErrorPageComponent, data: { message: 'Page not Found' } },

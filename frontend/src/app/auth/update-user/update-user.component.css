@@ -1,0 +1,13 @@
+mat-card-subtitle {
+    padding-bottom: 20px;
+}
+
+.two-form {
+    margin-top: 5%;;
+    padding: 20px;
+    position:relative;
+    left:50%;
+    transform: translate(-50%, 0);
+    max-width: 340px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
+}

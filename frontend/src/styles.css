@@ -1,8 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 /* @import "@material/image-list/mdc-image-list"; */
-  body, html, .body {
+  body, html {
     height: 100%;
+  }
+
+  .body{
+    height: -webkit-calc(100% - 65px);
   }
 
 .example-container {
@@ -18,17 +22,34 @@
     color: black;
     background: #99a4e0;
 }
-/* 
-  .my-image-list {
-    @include mdc-image-list-standard-columns(5);
-  }
 
-  .my-masonry-image-list {
-    @include mdc-image-list-masonry-columns(5);
+hr {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.card-style{
+  margin-top: 5%;;
+  padding: 20px;
+  position:relative;
+  left:50%;
+  transform: translate(-50%, 0);
+  max-width: 340px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
+}
+
+card-description {
+  padding-bottom: 20px; 
+}
+
+button:focus {outline:0;}
+
+@media only screen and (max-width: 600px) {
+  .card-style{ 
+      position: fixed;
+      width: 100%;
+  }   
+  .body{
+    height: -webkit-calc(100% - 54px);
   }
-    
-  @media (max-width: 599px) {
-    .my-image-list {
-      @include mdc-image-list-standard-columns(3);
-    }
-  } */
+}

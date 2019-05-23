@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { MatCardModule, MatSelectModule, MatPaginatorModule, MatButtonModule } from '@angular/material';
+import { MatSidenavModule } from '@angular/material';
 import { CommonModule } from '@angular/common';
 
 import { CarsComponent } from './cars.component';
@@ -23,7 +24,8 @@ import { CarsRoutingModule } from './cars-routing.module';
         MatSelectModule,
         MatButtonModule,
         MatPaginatorModule,
-        MatCardModule,
+        MatCardModule, 
+        MatSidenavModule,
 
         CarsRoutingModule
     ]

@@ -17,9 +17,9 @@ export interface Cars {
 @Injectable()
 export class WebService {
 
-    // BASE_URL = 'http://localhost:3000/api';
+    BASE_URL = 'http://localhost:3000/api';
     // BASE_URL = 'http://ec2-3-95-160-125.compute-1.amazonaws.com:3000/api';    
-     BASE_URL = 'https://vehicleparty.com:3000/api';
+    //  BASE_URL = 'https://vehicleparty.com:3000/api';
 
     // private carStore = [];
     // private carsSubject = new Subject();
@@ -31,12 +31,13 @@ export class WebService {
     constructor(private http: HttpClient, private snackBar: MatSnackBar, private auth: AuthService) { }
 
     getOneCar(oneCar) {
-
+        
         if (oneCar) {
             // This method we send the Car Id in the url eg. cars/AU8442
             // return this.http.get<Car>(this.BASE_URL + '/cars/' + oneCar,{
             // In the express server you have to implement 
             // api.get('/car/:id', authMiddleware, (req, resp) => {})
+            
             return this.http.get<Car>(this.BASE_URL + '/car' ,{
                 withCredentials: true,
                 params: new HttpParams().set('id', oneCar)                                        

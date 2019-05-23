@@ -1,5 +1,7 @@
-<mat-card class="example-card card-login">
-  <form [formGroup]="formName" (ngSubmit)="updateName()" class="example-form">
+<div class="two-form">
+  <p class="card-description">User Settings</p>
+  <hr>
+  <form [formGroup]="formName" (ngSubmit)="updateName()" >
     <!-- <mat-card class="example-card card-login"> -->
     <mat-form-field class="example-full-width">
       <input [ngClass]="{'error': isValid('firstName')}" matInput placeholder="First Name" formControlName="firstName"
@@ -17,9 +19,9 @@
 
     <button mat-raised-button color="primary">Update Name</button>
     <!-- </mat-card> -->
-  </form>  
+  </form>
 
-  <form [formGroup]="formPassword" (ngSubmit)="updatePassword()" class="example-form">
+  <form [formGroup]="formPassword" (ngSubmit)="updatePassword()" >
 
     <mat-form-field class="example-full-width">
       <input [ngClass]="{'error': isValid('currentPassword')}" type="password" matInput placeholder="Current Password"
@@ -45,4 +47,4 @@
     <button mat-raised-button color="primary">Update Password</button>
 
   </form>
-</mat-card>
+<!-- </div> -->

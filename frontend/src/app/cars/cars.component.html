@@ -1,31 +1,39 @@
-<!-- <p>
-  <mat-form-field appearance="outline">
-    <mat-label>Search Cars</mat-label>
-    <input [(ngModel)]="searchTerm" matInput placeholder="By Brand">
-  </mat-form-field>
-</p> -->
-<div class="car-container">
+<mat-sidenav-container class="example-container">
+  <mat-sidenav (keydown.escape)="sidenav.toggle()" #sidenav mode="side" class="example-sidenav"
+    [fixedInViewport]="false" [fixedTopGap]="0" [fixedBottomGap]="0">
+    <p class="closebutton-container">
+      <button type="button" class="close" aria-label="Close" (click)="sidenav.toggle()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </p>
+    <!-- Cars Details -->
+    <router-outlet></router-outlet>
+  </mat-sidenav>
 
-  <section class="filter-box">
-    <mat-form-field>
-      <mat-label>Sort by</mat-label>
-      <mat-select (selectionChange)="onFilterChanged($event)">
-        <mat-option *ngFor="let carpick of carsListPrice" [value]="carpick.value">
-          {{carpick.viewValue}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </section>
+  <mat-sidenav-content>
 
-  <!-- <router-outlet></router-outlet> -->
+    <!-- Filter by Price -->
+    <section class="filter-box">
+      <mat-form-field>
+        <mat-label>Sort by</mat-label>
+        <mat-select (selectionChange)="onFilterChanged($event)">
+          <mat-option *ngFor="let carpick of carsListPrice" [value]="carpick.value">
+            {{carpick.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </section>
 
-  <section class="car-list">
-    <app-car-detail *ngFor="let carEl of cars" [car]='carEl'></app-car-detail>
-  </section>
+    <!-- Car List -->
+    <div class="display-list-grid">
+      <app-car-detail *ngFor="let carEl of cars" [car]='carEl' (click)="sideNavOpen()"></app-car-detail>
+    </div>
 
-  <mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-    [pageIndex]="pageIndex" (page)="onPageChanged($event)">
-  </mat-paginator>
+    <!-- Navigation Bar -->
+    <mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+      [pageIndex]="pageIndex" (page)="onPageChanged($event)">
+    </mat-paginator>
+    <mat-card *ngIf="(totalRecords) == 0 " class="mat-card-warning">No car was found</mat-card>
 
-  <mat-card *ngIf="(totalRecords) == 0 " class="mat-card-warning">No car was found</mat-card>
-</div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

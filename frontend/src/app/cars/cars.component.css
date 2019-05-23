@@ -2,33 +2,46 @@
     background-color: rgb(218, 99, 99);
     color: white;
 } */
-.car-container {
+ .car-container {
  position: relative;
- top: 80px;
-}
-
-section{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-auto-rows: auto;
-    grid-gap:10px;
-    max-width: 95%;
 }
 
 section.filter-box{
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 10px;
 }
 
-section.car-list{
+.display-list-grid {  
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-auto-rows: auto;
+  grid-gap:10px;
+  max-width: 95%;
+  margin: auto;
+  grid-row-gap: 0em ;
+  grid-column-gap: 3em ;
+}
+
+.closebutton-container{
+  height: 12px;
+  margin-top:16px;
+  margin-bottom: 32px;
+}
+
+.close{ 
+  /* float: none; */
+   padding-right: 15px;
+}
+
+.mat-drawer-inner-container {
+  max-height: fit-content;
+}
+
+app-car-detail{
   margin-bottom: 70px;
 }
-
-mat-card {
-    margin: auto;
-    max-width: 200px;
-  }
 
 .mat-paginator{
   position: fixed;
@@ -37,13 +50,47 @@ mat-card {
   transform: translate(0, -50px);
   width: 100%;
 }
-mat-form-field{
-    text-align: center;
-    margin-right: 1px;
+
+
+
+  .example-container {
+    position: absolute;
+    top: 60px;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+  }
+  
+  .example-sidenav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
   }
 
-  @media only screen and (max-width: 600px) {
-    /* section {
-        margin: 0 auto;
-    } */
+  @media (min-width: 576px) { 
+    .example-sidenav {
+      width: 60%;
+    }
   }
+  @media (min-width: 768px) { 
+      .example-sidenav {
+        width: 50%;
+      }
+    }
+
+    @media (min-width: 1200px) { 
+      .example-sidenav {
+        width: 35%;
+      }
+    }
+    
+
+   /* @media only screen and (min-width: 768px) { 
+    .example-sidenav {
+      width: 300px;
+    } */
+   
+
+
+  

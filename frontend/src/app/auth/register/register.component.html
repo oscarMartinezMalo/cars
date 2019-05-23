@@ -1,4 +1,6 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="example-form card-register">
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="example-form card-register card-style">
+    <mat-card-subtitle class="card-description">SignUp</mat-card-subtitle>
+    <hr>
   <mat-card class="example-card ">
     <mat-form-field class="example-full-width">
       <input [ngClass]="{'error': isValid('firstName')}" matInput placeholder="First Name" formControlName="firstName" maxlength="15">

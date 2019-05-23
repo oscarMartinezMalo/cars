@@ -139,6 +139,7 @@ const PassCheckMiddleware = (req, res, next) => {
 
     api.get('/car', authMiddleware, (req, resp) => {
     let id = req.query.id;
+    console.log(id)
     // Console log to check if user loggedIn
     // req.session.user ? console.log("Old session") : console.log("New session");
 

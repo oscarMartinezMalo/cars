@@ -27,7 +27,6 @@ export class PaymentComponent {
 
   pay() {
     if (this.paypalForm.valid) {
-
       this.snackBar.open("Paypal is going to load in a new page", "close", { duration: 2000 });
 
       this.paypal.paypalPay(this.paypalForm.value).

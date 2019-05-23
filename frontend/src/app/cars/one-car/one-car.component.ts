@@ -11,7 +11,7 @@ import { Car } from '../car.model';
 })
 export class OneCarComponent implements OnInit {
 
-  oneCar: Car;
+  oneCar: Car = new Car();
   id: string;
 
   constructor(private webService: WebService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }

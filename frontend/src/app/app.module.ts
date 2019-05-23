@@ -9,7 +9,8 @@ import { AppRoutingModude } from './app-routing.module';
 import { ErrorPageComponent } from './error-page/error-page.component';
 
 // My Modules
-import { CarsModule } from './cars/cars.module';
+// Is remark cuz Im gonna use lazy loading in this module
+// import { CarsModule } from './cars/cars.module';
 import { AuthModule } from './auth/auth.module';
 import { PaymentModule } from './paypal-payment/payment.module';
 import { CoreModule } from './core/core.module';
@@ -27,7 +28,8 @@ import { CoreModule } from './core/core.module';
     HttpClientModule,
     MatSnackBarModule,
 
-    CarsModule,
+    // Is remark cuz Im gonna use lazy loading in this module
+    // CarsModule,
     PaymentModule,    
     AuthModule,
     AppRoutingModude,
