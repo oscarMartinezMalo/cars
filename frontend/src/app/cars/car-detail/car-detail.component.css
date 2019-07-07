@@ -1,13 +1,25 @@
-mat-card {
+mat-card.example-card {
     margin: auto;
-    /* max-width: 200px; */
-    /* Add shadows to create the "card" effect */
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
+    box-shadow: 0 1px 2px 0 var( --main-bg-color-light );
   }
 
   mat-card:hover {
     cursor: pointer;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
+    box-shadow: 0 8px 16px 0 var( --main-bg-color-dark );
+  }
+
+  mat-card-header{
+    display: block;
+  }
+
+  .mat-card-image{
+    margin-bottom: 0px;
+  }
+
+  mat-card-footer{
+    background-color: var( --main-bg-color );
+    color: var( --main-txt-color );
+    padding: 10px;
   }
 

@@ -1,6 +1,6 @@
 <mat-sidenav-container class="example-container">
-  <mat-sidenav (keydown.escape)="sidenav.toggle()" #sidenav mode="side" class="example-sidenav"
-    [fixedInViewport]="false" [fixedTopGap]="0" [fixedBottomGap]="0">
+  <mat-sidenav (keydown.escape)="sidenav.toggle()" #sidenav mode="side" class="example-sidenav" [fixedInViewport]="true"
+    [fixedTopGap]="0" [fixedBottomGap]="0">
     <p class="closebutton-container">
       <button type="button" class="close" aria-label="Close" (click)="sidenav.toggle()">
         <span aria-hidden="true">&times;</span>
@@ -12,8 +12,9 @@
 
   <mat-sidenav-content>
 
-    <!-- Filter by Price -->
+
     <section class="filter-box">
+      <!-- Filter by Price -->
       <mat-form-field>
         <mat-label>Sort by</mat-label>
         <mat-select (selectionChange)="onFilterChanged($event)">
@@ -22,9 +23,16 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+
+
+      <mat-form-field>
+          <input matInput [(ngModel)]="search"  placeholder="Search"   (keyup.enter)="onSearchEnter()">
+          <mat-icon class="search-button" matSuffix  (click)="onSearch()" >search</mat-icon>
+      </mat-form-field>
     </section>
 
     <!-- Car List -->
+    
     <div class="display-list-grid">
       <app-car-detail *ngFor="let carEl of cars" [car]='carEl' (click)="sideNavOpen()"></app-car-detail>
     </div>

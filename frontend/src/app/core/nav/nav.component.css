@@ -1,4 +1,15 @@
 mat-toolbar {
-    /* position: fixed;
-    z-index: 10;  */
+    background-color: var( --main-bg-color);
+}
+
+button {
+    color: var( --main-txt-color );
+}
+
+.mat-button-custom {
+    color: var( --secondary-txt-color );
+}
+
+.mat-button-custom.active {
+    color: var( --main-txt-color );
 }

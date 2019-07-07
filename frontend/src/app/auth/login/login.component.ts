@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-// import { FormBuilder, Validators } from "@angular/forms";
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -10,6 +9,7 @@ import { AuthService } from '../auth.service';
 export class LoginComponent implements OnInit {
 
   constructor(private auth: AuthService) { }
+  hide = true;
 
   loginData = {
     email: '',

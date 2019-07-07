@@ -1,4 +1,4 @@
-<mat-toolbar color="primary">
+<mat-toolbar>
 
   <button mat-button routerLink="/">Vehicle Party</button>
   <span style="flex: 1 1 auto"></span>
@@ -10,9 +10,9 @@
     <mat-icon>account_circle</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
-    <button mat-menu-item routerLinkActive="active" routerLink="/update">Update Account</button>
-    <button mat-menu-item routerLinkActive="active" routerLink="/payment">Contributions</button>
-    <button mat-button (click)="auth.logout()">Logout</button>
+    <button class="mat-button-custom" mat-menu-item routerLinkActive="active" routerLink="/update">Update Account</button>
+    <button class="mat-button-custom" mat-menu-item routerLinkActive="active" routerLink="/payment">Contributions</button>
+    <button class="mat-button-custom" mat-menu-item (click)="auth.logout()">Logout</button>
   </mat-menu>
 </mat-toolbar>
 

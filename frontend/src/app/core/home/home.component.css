@@ -1,6 +1,6 @@
 .jumbotron { 
   background-image: url("../../../assets/images/heroImage.jpg");
-  color: #ffffff;
+  color: var( --main-txt-color );;
   border-radius: 0px;
   
   height: 100%;
@@ -21,28 +21,38 @@
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: white;
+  color: var( --main-txt-color );
 }
 
- button.mat-primary{
-  border-color:  #3f51b5;
+p{
+  color: var( --main-bg-color-dark );
+}
+
+ .mat-stroked-button{
+  border-color: var( --main-bg-color );
+  color: var( --main-bg-color );
   border-radius: 20px;
 }
 
+.mat-stroked-button:hover{
+  background-color: var( --main-bg-color );
+  color: var( --secondary-bg-color );
+}
+
 h1::first-line {
-  color: #3f51b5;
+  color: var( --main-bg-color );
 }
 
 @media only screen and (max-width: 600px) {
   .jumbotron { 
     background-position: left
   }
-  button.mat-primary{
-    background-color: #3f51b5;
-    color: white;
+  .mat-stroked-button{
+    background-color: var( --main-bg-color );
+    color: var( --secondary-bg-color );
   }
 
   h1, p{
-    color:  #3f51b5;
+    color:  var( --main-bg-color );
   }
 }

@@ -66,8 +66,9 @@ export class WebService {
 
     }
 
-    getCarsPagination(page, perPage, sortByprice) {
-        return this.http.get<Cars>(this.BASE_URL + '/cars/' + page + '/' + perPage + '/' + sortByprice, { withCredentials: true })
+    getCarsPagination(page, perPage, sortByprice, search) {
+
+        return this.http.get<Cars>(this.BASE_URL + '/cars/' + page + '/' + perPage + '/' + sortByprice + '/' + search , { withCredentials: true })
             .pipe(
                 map(cars => {
                     return cars;

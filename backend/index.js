@@ -85,14 +85,25 @@ db.connect(err => {
 //     })
 // })
 
-api.get('/cars/:page/:perPage/:sortByprice', (req, res) => {
+// The question mark(?) indicate the filter is optional
+api.get('/cars/:page/:perPage/:sortByprice/:search?', (req, res) => {
+    // api.get('/cars/:page/:perPage/:sortByprice', (req, res) => {
 
     let perPage = req.params.perPage;
     let pageIndex = req.params.page;
     let sortByprice = req.params.sortByprice;
+    let search = req.params.search;
 
-    let sql = 'SELECT count(*) as totalCars FROM `cars`.`doral-hundai`';
-
+    let sql = "SELECT count(*) as totalCars FROM `cars`.`doral-hundai` ";
+    let searchQuery = "";
+    // If search!= undefined then the total of cars is gonna depent of the search criteria
+    // else the totalRecords is gonna be the total amount of cars
+    if (search != "undefined" && (typeof search !== 'undefined')) {
+        searchQuery =  "where `car-name` LIKE '%"+ search +"%'";
+        sql += searchQuery ;
+        console.log(search);
+    } 
+    
     db.query(sql, (err, resTotal) => {
         if (err) {
             throw err;
@@ -100,13 +111,14 @@ api.get('/cars/:page/:perPage/:sortByprice', (req, res) => {
 
             let totalRecords = resTotal[0].totalCars;
             let offsetNumber = pageIndex * perPage;
-            let sql1 = 'SELECT `stock-number` as stockNumber, `car-name` as carName, `price-difference` as priceDifference, `engine`, `tranmission`, `mpg-range` as mpgRange,`exterior-color` as exteriorColor FROM `cars`.`doral-hundai` order by `internet-price`' + sortByprice + ' limit ' + perPage + ' offset ' + offsetNumber;
 
+            let sql1 = 'SELECT `stock-number` as stockNumber, `car-name` as carName, `price-difference` as priceDifference, `engine`, `tranmission`, `mpg-range` as mpgRange,`exterior-color` as exteriorColor FROM `cars`.`doral-hundai` '+ searchQuery + ' order by `internet-price`' + sortByprice + ' limit ' + perPage + ' offset ' + offsetNumber;
+            console.log(sql1);
             db.query(sql1, (err, records) => {
-                if (err) {                    
+                if (err) {
                     throw err;
                 } else {
-                    console.log(records[1]);
+                    // console.log(records[1]);
                     res.status(200).json({ 'total': totalRecords, 'pageIndex': pageIndex, records });
                 }
             });
@@ -121,7 +133,7 @@ const authMiddleware = (req, res, next) => {
     if (req.session && req.session.user) {
         next();
     } else {
-        res.status(403).json({  message: "Please login first" });
+        res.status(403).json({ message: "Please login first" });
     }
 };
 
@@ -137,7 +149,7 @@ const PassCheckMiddleware = (req, res, next) => {
 // Pass the middleWare if you wanna ask if the user is logged before executing the request
 // api.get('/car/:id', authMiddleware, (req, resp) => {
 
-    api.get('/car', authMiddleware, (req, resp) => {
+api.get('/car', authMiddleware, (req, resp) => {
     let id = req.query.id;
     console.log(id)
     // Console log to check if user loggedIn
@@ -361,7 +373,7 @@ auth.post('/updatePassword', authMiddleware, [
 ],
     (req, resp, next) => {
         const errors = validationResult(req);
-        
+
         if (!errors.isEmpty()) {
             return resp.status(422).json({ error: { message: errors.array()[0].msg } });
         }

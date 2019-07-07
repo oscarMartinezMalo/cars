@@ -1,5 +1,5 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="example-form card-register card-style">
-    <mat-card-subtitle class="card-description">SignUp</mat-card-subtitle>
+    <p class="card-description">SignUp</p>
     <hr>
   <mat-card class="example-card ">
     <mat-form-field class="example-full-width">
@@ -33,7 +33,7 @@
         <mat-error *ngIf="form.hasError('notEqual', 'confirmPassword')">Passwords do not match</mat-error>
     </mat-form-field>
 
-    <button mat-raised-button color="primary">Register</button>
+    <button mat-raised-button >Register</button>
 
   </mat-card>
 </form>

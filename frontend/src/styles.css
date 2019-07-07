@@ -1,34 +1,63 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 /* @import "@material/image-list/mdc-image-list"; */
-  body, html {
-    height: 100%;
-  }
 
-  .body{
-    height: -webkit-calc(100% - 65px);
-  }
+:root {
+  --main-bg-color: #880e4f;
+  --main-bg-color-light: #bc477b;
+  --main-bg-color-dark: #560027;
+  --secondary-bg-color:white ;
+  --main-txt-color: white; 
+  --secondary-txt-color: black; 
+}
+
+body, html {
+  height: 100%;
+}
+
+.body{
+  height: -webkit-calc(100% - 65px);
+}
 
 .example-container {
-    display: flex;
-    flex-direction: column;
-  }
+  display: flex;
+  flex-direction: column;
+}
   
 .example-full-width {
     width: 100%;
   }
 
-  .active {
-    color: black;
-    background: #99a4e0;
+button.mat-raised-button{
+  color: var(--main-txt-color);
+  background: var(--main-bg-color-light);
+}
+
+.active {
+  color: var(--main-txt-color);
+  background: var(--main-bg-color-light);
+}
+
+.mat-button-custom.active:hover {
+  color: var(--secondary-txt-color);
+  background: var(--main-bg-color-dark);
 }
 
 hr {
   margin-top: 1rem;
   margin-bottom: 2rem;
+  background-color: var( --main-txt-color );
 }
 
-.card-style{
+mat-toolbar .mat-icon{
+  color: var(--main-txt-color);
+}
+.mat-icon {
+  color: var(--main-bg-color);
+  cursor:pointer;
+}
+
+.card-style,.two-form{
   margin-top: 5%;;
   padding: 20px;
   position:relative;
@@ -36,10 +65,11 @@ hr {
   transform: translate(-50%, 0);
   max-width: 340px;
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
+  background-color: var( --main-bg-color );
 }
 
-card-description {
-  padding-bottom: 20px; 
+.card-description {
+  color:var( --main-txt-color );
 }
 
 button:focus {outline:0;}

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PaymentComponent } from './payment/payment.component';
 import { PaymentStatusComponent } from './payment-status/payment-status.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule, MatInputModule, MatCardModule } from '@angular/material';
+import { MatButtonModule, MatInputModule, MatCardModule, MatTooltipModule } from '@angular/material';
 
 @NgModule({
     declarations: [
@@ -18,7 +18,8 @@ import { MatButtonModule, MatInputModule, MatCardModule } from '@angular/materia
         ReactiveFormsModule,
         MatButtonModule,
         MatInputModule,
-        MatCardModule
+        MatCardModule,
+        MatTooltipModule
     ]
 })
 export class PaymentModule { }

@@ -10,6 +10,7 @@ import { ResetPassComponent } from './reset-pass/reset-pass.component';
 import { MatCardModule, MatButtonModule, MatInputModule } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfirmValidatorDirective } from './confirm-validator.directive';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
     declarations: [
@@ -28,6 +29,7 @@ import { ConfirmValidatorDirective } from './confirm-validator.directive';
         MatButtonModule,
         MatInputModule,
         MatCardModule,
+        MatIconModule,
 
         AuthRoutingModule
     ]

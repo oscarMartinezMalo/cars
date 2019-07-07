@@ -1,50 +1,54 @@
 <div class="two-form">
   <p class="card-description">User Settings</p>
   <hr>
-  <form [formGroup]="formName" (ngSubmit)="updateName()" >
-    <!-- <mat-card class="example-card card-login"> -->
-    <mat-form-field class="example-full-width">
-      <input [ngClass]="{'error': isValid('firstName')}" matInput placeholder="First Name" formControlName="firstName"
-        maxlength="15">
-      <mat-error *ngIf="formName.hasError('required', 'firstName')">Required</mat-error>
-      <mat-error *ngIf="formName.hasError('minlength', 'firstName')">Minimum length 3 characters</mat-error>
-    </mat-form-field>
+  <mat-card class="example-card ">
+    <form [formGroup]="formName" (ngSubmit)="updateName()">
 
-    <mat-form-field class="example-full-width">
-      <input [ngClass]="{'error': isValid('lastName')}" matInput placeholder="Last Name" formControlName="lastName"
-        maxlength="15">
-      <mat-error *ngIf="formName.hasError('required', 'lastName')">Required</mat-error>
-      <mat-error *ngIf="formName.hasError('minlength', 'lastName')">Minimum length 3 characters</mat-error>
-    </mat-form-field>
+      <mat-form-field class="example-full-width">
+        <input [ngClass]="{'error': isValid('firstName')}" matInput placeholder="First Name" formControlName="firstName"
+          maxlength="15">
+        <mat-error *ngIf="formName.hasError('required', 'firstName')">Required</mat-error>
+        <mat-error *ngIf="formName.hasError('minlength', 'firstName')">Minimum length 3 characters</mat-error>
+      </mat-form-field>
 
-    <button mat-raised-button color="primary">Update Name</button>
-    <!-- </mat-card> -->
-  </form>
+      <mat-form-field class="example-full-width">
+        <input [ngClass]="{'error': isValid('lastName')}" matInput placeholder="Last Name" formControlName="lastName"
+          maxlength="15">
+        <mat-error *ngIf="formName.hasError('required', 'lastName')">Required</mat-error>
+        <mat-error *ngIf="formName.hasError('minlength', 'lastName')">Minimum length 3 characters</mat-error>
+      </mat-form-field>
 
-  <form [formGroup]="formPassword" (ngSubmit)="updatePassword()" >
+      <button mat-raised-button>Update Name</button>
 
-    <mat-form-field class="example-full-width">
-      <input [ngClass]="{'error': isValid('currentPassword')}" type="password" matInput placeholder="Current Password"
-        formControlName="currentPassword" maxlength="15">
-      <mat-error *ngIf="formPassword.hasError('required', 'currentPassword')">Required</mat-error>
-      <mat-error *ngIf="formPassword.hasError('minlength', 'currentPassword')">Minimum length 3 characters</mat-error>
-    </mat-form-field>
+    </form>
+  </mat-card>
 
-    <mat-form-field class="example-full-width">
-      <input [ngClass]="{'error': isValid('newPassword')}" type="password" matInput placeholder="New Password"
-        formControlName="newPassword" maxlength="15">
-      <mat-error *ngIf="formPassword.hasError('required', 'newPassword')">Required</mat-error>
-      <mat-error *ngIf="formPassword.hasError('minlength', 'newPassword')">Minimum length 3 characters</mat-error>
-    </mat-form-field>
+  <hr>
+  <mat-card class="example-card ">
+    <form [formGroup]="formPassword" (ngSubmit)="updatePassword()">
 
-    <mat-form-field class="example-full-width">
-      <input [ngClass]="{'error': isValid('confirmPassword')}" type="password" matInput placeholder="Confirm Password"
-        formControlName="confirmPassword" appConfirmValidator="newPassword" maxlength="15">
-      <mat-error *ngIf="formPassword.hasError('required', 'confirmPassword')">Required</mat-error>
-      <mat-error *ngIf="formPassword.hasError('notEqual', 'confirmPassword')">Passwords do not match</mat-error>
-    </mat-form-field>
+      <mat-form-field class="example-full-width">
+        <input [ngClass]="{'error': isValid('currentPassword')}" type="password" matInput placeholder="Current Password"
+          formControlName="currentPassword" maxlength="15">
+        <mat-error *ngIf="formPassword.hasError('required', 'currentPassword')">Required</mat-error>
+        <mat-error *ngIf="formPassword.hasError('minlength', 'currentPassword')">Minimum length 3 characters</mat-error>
+      </mat-form-field>
 
-    <button mat-raised-button color="primary">Update Password</button>
+      <mat-form-field class="example-full-width">
+        <input [ngClass]="{'error': isValid('newPassword')}" type="password" matInput placeholder="New Password"
+          formControlName="newPassword" maxlength="15">
+        <mat-error *ngIf="formPassword.hasError('required', 'newPassword')">Required</mat-error>
+        <mat-error *ngIf="formPassword.hasError('minlength', 'newPassword')">Minimum length 3 characters</mat-error>
+      </mat-form-field>
 
-  </form>
-<!-- </div> -->
+      <mat-form-field class="example-full-width">
+        <input [ngClass]="{'error': isValid('confirmPassword')}" type="password" matInput placeholder="Confirm Password"
+          formControlName="confirmPassword" appConfirmValidator="newPassword" maxlength="15">
+        <mat-error *ngIf="formPassword.hasError('required', 'confirmPassword')">Required</mat-error>
+        <mat-error *ngIf="formPassword.hasError('notEqual', 'confirmPassword')">Passwords do not match</mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button>Update Password</button>
+
+    </form>
+  </mat-card>

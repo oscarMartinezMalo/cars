@@ -1,16 +1,20 @@
 <div class="card-style">
-    <p>Donations</p>
+    <p class="card-description">Donations</p>
     <hr>
   <form [formGroup]="paypalForm" (ngSubmit)="pay()" class="example-form">
-
+      <mat-card>
     <mat-form-field class="example-full-width">
-      <input matInput type="number" formControlName="amount" value="0" min='1' max='99'>
+      <input matInput type="number" formControlName="amount" min='1' max='99'>
+      <span matPrefix>$&nbsp;</span>
+      <span matSuffix>.00</span>
       <mat-error *ngIf="paypalForm.hasError('required', 'amount')">Required</mat-error>
       <mat-error *ngIf="paypalForm.hasError('max', 'amount')">Maximum donation 99 dollars</mat-error>
       <mat-error *ngIf="paypalForm.hasError('min', 'amount')">Minimum donation 1 dollar</mat-error>
     </mat-form-field>
 
-    <button mat-raised-button color="primary"  [disabled]= "!paypalForm.valid">Submit Donation</button>
-
+    <button mat-raised-button [disabled]= "!paypalForm.valid" matTooltip="For test purposes use: username(yanelis@asd.com) password(asdasd)">Submit Donation</button>
+  </mat-card>
   </form>
 </div>
+
+

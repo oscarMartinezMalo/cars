@@ -28,4 +28,21 @@
     }    
   } */
 
-  
+  .card-body{
+    background-color: var( --main-bg-color );
+    color: var( --main-txt-color );
+  }
+
+.card-img{
+    border-radius: 0px;
+}
+  .card-sidenav {
+      border: none;
+      border-radius: 0px;
+  }
+
+  .mat-stroked-button{
+    border-color: var( --main-bg-color );
+    color: var( --main-bg-color );
+    border-radius: 20px;
+  }

@@ -9,7 +9,17 @@ p{
 }
 
 .success{
-    background-color: rgb(119, 228, 177);
+    background-color: #2bbd7e;
     color: whitesmoke;
 }
 
+
+.warning-button{
+    background-color: #9a0007;
+    color: whitesmoke;
+}
+
+.success-button{
+    background-color: #80e27e;
+    color: var( --secondary-txt-color );
+}

@@ -22,16 +22,8 @@
 <!-- <mat-card *ngIf="!oneCar" class="mat-card-warning">Please login to see car info </mat-card> -->
 
 <!-- Card boostrap -->
-<div class="card">
-
-    <img class="card-img"
-        src="https://images.unsplash.com/photo-1547010427-45f4b5a8092f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-        alt="Card image">
-    <!-- <div class="card-img-overlay">
-        <button type="button" class="close" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div> -->
+<div class="card card-sidenav">
+    <img class="card-img" src="https://images.unsplash.com/photo-1547010427-45f4b5a8092f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Card image">
 
     <div class="card-body">
         <h5 class="card-title">{{oneCar.carName}}</h5>
@@ -39,8 +31,10 @@
         <p class="card-text">{{oneCar.tranmission}} </p>
         <p class="card-text">{{oneCar.mpgRange}} </p>
         <p class="card-text">{{oneCar.exteriorColor}} </p>
+        <!-- <a href="{{oneCar.pagination2Href}}" target='_blank'  class="link-button">Source</a> -->
     </div>
     <div class="card-footer">
-        <small class="text-muted">{{oneCar.priceDifference}}</small>
+        <p>{{oneCar.priceDifference}}</p>
     </div>
+
 </div>

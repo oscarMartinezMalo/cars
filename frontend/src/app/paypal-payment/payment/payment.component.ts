@@ -39,7 +39,6 @@ export class PaymentComponent {
         });
 
       this.paypalForm.reset();
-
     }
   }
 

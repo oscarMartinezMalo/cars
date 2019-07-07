@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
+import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
 
 // import { MainNavComponent } from "./main-nav/main-nav.component";
 import { PaymentStatusComponent } from "./paypal-payment/payment-status/payment-status.component";
@@ -33,7 +33,7 @@ const appRoutes: Routes = [
   // { path: 'forgotpass', component: ForgotPassComponent },
   // { path: 'resetpass/:token', component: ResetPassComponent },
   { path: '', component: HomeComponent},
-  { path: 'cars', loadChildren: './cars/cars.module#CarsModule'},
+  { path: 'cars', loadChildren: './cars/cars.module#CarsModule'}, //Lazy loading
   { path: 'payment', canActivate: [AuthGuard], component: PaymentComponent },
   { path: 'payment/:status', canActivate: [AuthGuard], component: PaymentStatusComponent },
   { path: 'not_found', component: ErrorPageComponent, data: { message: 'Page not Found' } },
@@ -42,9 +42,10 @@ const appRoutes: Routes = [
 
 @NgModule({
   imports: [
-    // Location Strategies you can configurate the webhost to render index.html in case that does found the page and set useHash: false
-    // This configuration you can do it to in   app.module ans set the location strategy
-    RouterModule.forRoot(appRoutes, { useHash: true })
+    //useHash Location Strategies you can configurate the webhost to render index.html in case that does found the page and set useHash: false
+    // This configuration you can do it to in   app.module and set the location strategy
+    //preolading loads the lazy loading elements one the front page is loadded
+    RouterModule.forRoot(appRoutes, { preloadingStrategy: PreloadAllModules, useHash: true })
   ],
   exports: [RouterModule]
 })
