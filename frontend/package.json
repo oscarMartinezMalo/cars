@@ -26,7 +26,7 @@
     "bootstrap": "^4.3.1",
     "braintree-web": "^3.42.0",
     "core-js": "^2.5.4",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "ngx-cookie-service": "^1.0.10",
     "ngx-pagination": "^3.2.0",
     "paypal-rest-sdk": "^1.8.1",
